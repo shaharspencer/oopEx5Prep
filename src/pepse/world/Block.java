@@ -9,10 +9,10 @@ import danogl.util.Vector2;
  * Represents a single block (larger objects can be created from blocks).
  */
 public class Block extends GameObject {
+    // Size of a single block. Default size: 30.
+    public static int SIZE = 30;
     // constant field for tag value to be set for class instances
     private static final String GROUND_TAG = "ground";
-    // Size of a single block. Default size: 30.
-    private static int SIZE = 30;
 
     /**
      * Construct a new Block instance.
