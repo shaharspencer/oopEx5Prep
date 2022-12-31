@@ -27,11 +27,12 @@ public class SunHalo {
      */
     public static GameObject create(GameObjectCollection gameObjects, int layer,
                                     GameObject sun, Color color) {
-        Vector2 location = Vector2.ZERO;
         Renderable haloRenderable = new OvalRenderable(color);
-        GameObject halo = new GameObject(location, sun.getDimensions().mult(HALO_SIZE_FACTOR),
+        GameObject halo = new GameObject(sun.getCenter(), sun.getDimensions().mult(HALO_SIZE_FACTOR),
                 haloRenderable);
         halo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+        halo.addComponent(x -> halo.setCenter(sun.getCenter()));
+
         gameObjects.addGameObject(halo, layer);
         halo.setTag(HALO_TAG);
         return halo;
