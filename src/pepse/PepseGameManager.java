@@ -25,6 +25,7 @@ public class PepseGameManager extends GameManager {
     private static int SKY_LAYER = Layer.BACKGROUND;
     private static final int LAYERS_DIFF = 1;
     private static int SUN_LAYER = SKY_LAYER + LAYERS_DIFF;
+    private static int HALO_LAYER = SUN_LAYER + LAYERS_DIFF;
     static Vector2 windowSize = new Vector2(700, 500);
     private Vector2 windowDimensions;
     private ImageReader imageReader;
@@ -32,7 +33,6 @@ public class PepseGameManager extends GameManager {
     private UserInputListener inputListener;
     private WindowController windowController;
     private GameObject sun;
-    private static int HALO_LAYER = SUN_LAYER + LAYERS_DIFF;
 
     PepseGameManager() {
         super("", windowSize);
