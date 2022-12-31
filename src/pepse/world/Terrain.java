@@ -51,19 +51,19 @@ public class Terrain {
      * @return The ground height at the given location.
      */
     public double groundHeightAt(float x){
-        Random rand = new Random();
-//        rand.ge
-        double sinX = Math.sin(x);
+
         double noise = noiseGenerator.noise(x);
-//        int multBy = rand.nextInt(BASIC_HEIGHT);
+
         double ret = Math.abs(BASIC_HEIGHT *
                 noise);
+
+
         if (ret < Block.SIZE){
-            return Block.SIZE;
+            return windowDimensions.y() - Block.SIZE;
         }
-        return Math.abs(BASIC_HEIGHT *
-               noise);
-//        return sinX * multBy;
+
+        return windowDimensions.y() - ret;
+
     }
 
     /**
@@ -77,7 +77,7 @@ public class Terrain {
 //        int upperBound = maxX - Block.SIZE;
         int upperBound = maxX;
         for (int x = lowerBound; x <= upperBound; x += Block.SIZE){
-            int y = (int) (int) groundHeightAt(x);
+            int y = (int) groundHeightAt(x);
             Vector2 topLeftCorner = new Vector2(x ,y);
 //            Block block = blockFactory.generateBlock(topLeftCorner);
 //            gameObjects.addGameObject(block);
@@ -91,10 +91,9 @@ public class Terrain {
      * @param
      */
     public void createInYRange(Vector2 topLeftCorner){
-        float yMinusDim = windowDimensions.y() - topLeftCorner.y();
-        int updateY = (int) (Math.floor((yMinusDim / Block.SIZE)) * Block.SIZE);
+        float yCoord = topLeftCorner.y();
 
-        for (int i = (int) (windowDimensions.y() - Block.SIZE); i >= yMinusDim - Block.SIZE; i -= Block.SIZE){
+        for (int i = (int) (windowDimensions.y() - Block.SIZE); i >= yCoord - Block.SIZE; i -= Block.SIZE){
             Block block = blockFactory.generateBlock(
                     new Vector2(
                     topLeftCorner.x(),
