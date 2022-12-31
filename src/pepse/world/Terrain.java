@@ -53,7 +53,6 @@ public class Terrain {
     public double groundHeightAt(float x){
 
         double noise = noiseGenerator.noise(x);
-        double ret = Math.abs(BASIC_HEIGHT * noise);
 
         double distFromFLoor = Math.abs(BASIC_HEIGHT * noise);
 
@@ -61,20 +60,9 @@ public class Terrain {
             distFromFLoor = Block.SIZE;
         }
 
-        double distFromTop = windowDimensions.y() - distFromFLoor;
+        int distFromFloor_dividableBySize = (int) (Math.floor(distFromFLoor/ Block.SIZE) * Block.SIZE);
+        return windowDimensions.y() - distFromFloor_dividableBySize;
 
-        int distFromTop_dividableBySize = (int) (Math.floor(distFromTop / Block.SIZE) * Block.SIZE);
-        return distFromTop_dividableBySize;
-
-        /*
-        if (ret > (int) windowDimensions.y() - Block.SIZE){
-            return (int) windowDimensions.y() - Block.SIZE;
-        }
-         */
-
-        //int updateY = (int) (Math.floor((ret / Block.SIZE)) * Block.SIZE);
-        //double tempHeight = windowDimensions.y() - updateY;
-        //return tempHeight;
     }
 
     /**
