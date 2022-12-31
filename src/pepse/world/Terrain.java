@@ -53,17 +53,28 @@ public class Terrain {
     public double groundHeightAt(float x){
 
         double noise = noiseGenerator.noise(x);
+        double ret = Math.abs(BASIC_HEIGHT * noise);
 
-        double ret = Math.abs(BASIC_HEIGHT *
-                noise);
+        double distFromFLoor = Math.abs(BASIC_HEIGHT * noise);
 
+        if (distFromFLoor< Block.SIZE){
+            distFromFLoor = Block.SIZE;
+        }
 
-        if (ret < Block.SIZE){
+        double distFromTop = windowDimensions.y() - distFromFLoor;
+
+        int distFromTop_dividableBySize = (int) (Math.floor(distFromTop / Block.SIZE) * Block.SIZE);
+        return distFromTop_dividableBySize;
+
+        /*
+        if (ret > (int) windowDimensions.y() - Block.SIZE){
             return (int) windowDimensions.y() - Block.SIZE;
         }
-        int updateY = (int) (Math.floor((ret / Block.SIZE)) * Block.SIZE);
-        double tempHeight = windowDimensions.y() - updateY;
-        return tempHeight;
+         */
+
+        //int updateY = (int) (Math.floor((ret / Block.SIZE)) * Block.SIZE);
+        //double tempHeight = windowDimensions.y() - updateY;
+        //return tempHeight;
     }
 
     /**
@@ -97,8 +108,8 @@ public class Terrain {
         for (int i = (int) (windowDimensions.y() - Block.SIZE); i >= yCoord - Block.SIZE; i -= Block.SIZE){
             Block block = blockFactory.generateBlock(
                     new Vector2(
-                    topLeftCorner.x(),
-                    i));
+                            topLeftCorner.x(),
+                            i));
             gameObjects.addGameObject(block);
         }
 
