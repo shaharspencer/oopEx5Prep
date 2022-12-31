@@ -18,13 +18,30 @@ import static danogl.components.Transition.TransitionType.TRANSITION_LOOP;
 public class Leaf extends GameObject {
     private static final int leafSize = 50;
     public Leaf(Vector2 topLeftCorner, GameObjectCollection gameObjects,
-                RectangleRenderable leafRenderebale){
+                RectangleRenderable leafRenderebale) {
         super(topLeftCorner, new Vector2(leafSize, leafSize), leafRenderebale);
         gameObjects.addGameObject(this);
-        this.renderer().setRenderableAngle((float) ((float) (5/6) * Math.PI));
+        this.renderer().setRenderableAngle((float) ((float) (5 / 6) * Math.PI));
         this.setTag("leaf");
+        moveLeaves();
+        makeLeavesFall();
+    }
+
+    private void makeLeavesFall() {
+        Random rand = new Random();
+
+        float lifeCycle = rand.nextInt();
+    }
 
 
+    private void setLeafColor(Color color){
+        RectangleRenderable re = new RectangleRenderable(color);
+        this.renderer().setRenderable(re);
+    }
+
+
+
+    private void moveLeaves() {
         Random rand = new Random();
         float waitTime = rand.nextFloat() * 2;
         new ScheduledTask(
@@ -32,12 +49,6 @@ public class Leaf extends GameObject {
                 waitTime,
                 false,
                 this::updateLeafAngle);
-
-    }
-
-    private void setLeafColor(Color color){
-        RectangleRenderable re = new RectangleRenderable(color);
-        this.renderer().setRenderable(re);
     }
 
     private void updateLeafAngle(){
