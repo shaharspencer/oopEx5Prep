@@ -10,6 +10,10 @@ public class BlockFactory {
     //renderable for creating the bricks
     private Renderable blockRenderable;
 
+    public BlockFactory(){
+        this.blockRenderable = null;
+    }
+
     /**
      * Constructor of a BlockFactory instance.
      * @param renderable used to create the instance of Block.
