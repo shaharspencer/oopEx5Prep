@@ -92,8 +92,7 @@ public class Terrain {
     public void createInYRange(Vector2 topLeftCorner){
         float yCoord = topLeftCorner.y();
 
-
-        for (int i = (int) (windowDimensions.y() - Block.SIZE); i >= yCoord - Block.SIZE; i -= Block.SIZE){
+        for (int i = (int) (windowDimensions.y() - Block.SIZE); i >= yCoord ; i -= Block.SIZE){
             Block block = blockFactory.generateBlock(
                     new Vector2(
                             topLeftCorner.x(),
