@@ -16,7 +16,7 @@ public class SingleTree extends GameObject {
     private static final Color STUMP_COLOR = new Color(94, 60, 39);
     private static final Renderable STUMP_RENDERABLE = new RectangleRenderable(STUMP_COLOR);
 
-    private Leaf[] leafs;
+    //private Leaf[] leafs;
 
     /**
      * Construct a new GameObject instance.

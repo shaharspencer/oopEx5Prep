@@ -24,6 +24,9 @@ public class Tree {
     private static final int MAX_TREETOP_SIZE = 80;
     private static final int MAX_TREE_DISTANCE = 200;
     private static final int MIN_TREE_WIDTH = 10;
+    private static final int DEFAULT_STUMP_WIDTH = 25;
+
+    private static final int DEFAULT_STUMP_HEIGHT = 220;
 
     private final int treeLayer;
     private final int seed;
@@ -48,7 +51,8 @@ public class Tree {
      * @param maxX end of range
      */
     public void createInRange(int minX, int maxX) {
-        int nextTreeStumpWidth = rand.nextInt(MAX_TREE_STUMP_WIDTH);
+        //int nextTreeStumpWidth = rand.nextInt(MAX_TREE_STUMP_WIDTH);
+        int nextTreeStumpWidth = DEFAULT_STUMP_WIDTH;
         for (int startPositionX = minX;
              startPositionX <= maxX - MAX_TREE_STUMP_WIDTH;
              startPositionX = startPositionX + rand.nextInt(MAX_TREE_DISTANCE) + nextTreeStumpWidth) {
