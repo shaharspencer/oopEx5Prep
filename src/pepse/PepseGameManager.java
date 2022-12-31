@@ -55,7 +55,6 @@ public class PepseGameManager extends GameManager {
         createGameObjects();
         GameObject nightObject = Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions,
                 DAY_CYCLE_LENGTH);
-
     }
 
 
