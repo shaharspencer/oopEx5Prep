@@ -3,15 +3,23 @@ package pepse.world.dayNight;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.components.CoordinateSpace;
+import danogl.components.Transition;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
 
 import java.awt.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+import static danogl.components.Transition.TransitionType.TRANSITION_LOOP;
+import static danogl.components.Transition.TransitionType.TRANSITION_ONCE;
 
 public class Sun {
 
     private static String suntag = "sun";
     private static Vector2 sunDimensions = new Vector2(100, 100);
+    private static int sunCoord = 20;
+
     /**
      * This function creates a yellow circle that moves in the sky
      * in an elliptical path (in camera coordinates).
@@ -26,18 +34,31 @@ public class Sun {
             int layer,
             Vector2 windowDimensions,
             float cycleLength){
+
         OvalRenderable sunRenderable = new OvalRenderable(Color.YELLOW);
         Vector2 topLeftCorner = new Vector2( 20,
                20);
+
+        Vector2 windowCenter = new Vector2(windowDimensions.x() /2, windowDimensions.y() /2);
         GameObject sun = new GameObject(topLeftCorner, sunDimensions, sunRenderable);
+        sun.setCenter(windowCenter);
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         sun.setTag(suntag);
         gameObjects.addGameObject(sun, layer);
+        createSunTransition(sun, cycleLength, windowCenter);
         return sun;
     }
 
-    private static void createSunTransition(GameObject sun){
+    private static void createSunTransition(GameObject sun, float cycleLength, Vector2 windowCenter){
 
+        Consumer<Float> m = (Float angle)-> {
+                sun.setCenter(new Vector2(
+                                windowCenter.x() + (float) (Math.cos(angle) * windowCenter.x()),
+               windowCenter.y ()+ (float) Math.sin(angle)* windowCenter.y()));};
+        new Transition<Float>(sun,
+                m, (float) ((float) Math.PI * 1.5), (float) (Math.PI * 3.5), Transition.LINEAR_INTERPOLATOR_FLOAT, cycleLength, TRANSITION_LOOP,
+               null);
     }
+
 
 }

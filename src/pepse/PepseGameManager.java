@@ -65,11 +65,13 @@ public class PepseGameManager extends GameManager {
         this.windowController = windowController;
 
         createGameObjects();
+        GameObject nightObject = Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions,
+                DAY_CYCLE_LENGTH);
 
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         new PepseGameManager().run();
     }
 }
