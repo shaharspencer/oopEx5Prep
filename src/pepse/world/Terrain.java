@@ -18,7 +18,7 @@ public class Terrain {
     private final Vector2 windowDimensions;
     private final int seed;
 
-    private final int FACTOR = 10;
+    private final int FACTOR = 12;
 
     private int BASIC_HEIGHT = Block.SIZE * FACTOR;
 
@@ -59,11 +59,11 @@ public class Terrain {
 
 
         if (ret < Block.SIZE){
-            return windowDimensions.y() - Block.SIZE;
+            return (int) windowDimensions.y() - Block.SIZE;
         }
-
-        return windowDimensions.y() - ret;
-
+        int updateY = (int) (Math.floor((ret / Block.SIZE)) * Block.SIZE);
+        double tempHeight = windowDimensions.y() - updateY;
+        return tempHeight;
     }
 
     /**
@@ -92,6 +92,7 @@ public class Terrain {
      */
     public void createInYRange(Vector2 topLeftCorner){
         float yCoord = topLeftCorner.y();
+
 
         for (int i = (int) (windowDimensions.y() - Block.SIZE); i >= yCoord - Block.SIZE; i -= Block.SIZE){
             Block block = blockFactory.generateBlock(
