@@ -11,12 +11,15 @@ import danogl.util.Vector2;
 import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.dayNight.Night;
+import pepse.world.dayNight.Sun;
 
 public class PepseGameManager extends GameManager {
     private static final int GROUND_LAYER = Layer.STATIC_OBJECTS;
     private static final int SEED = 0;
     // duration of a single day in the game in seconds
     private static final int DAY_CYCLE_LENGTH = 60;
+
+    int sunLayer = Layer.BACKGROUND;
     int skyLayer = Layer.BACKGROUND;
     static Vector2 windowSize = new Vector2(700, 500);
     private Vector2 windowDimensions;
@@ -35,6 +38,8 @@ public class PepseGameManager extends GameManager {
         Sky.create(gameObjects(), windowDimensions, skyLayer);
         Terrain terrain = new Terrain(gameObjects(), GROUND_LAYER, windowDimensions, SEED);
         terrain.createInRange(0, (int) windowDimensions.y());
+        terrain.createInRange(0, (int) windowDimensions.y());
+        Sun.create(gameObjects(),sunLayer,  windowDimensions,DAY_CYCLE_LENGTH);
 
 
     }
