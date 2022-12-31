@@ -7,12 +7,14 @@ import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
+import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.dayNight.Night;
 import pepse.world.dayNight.Sun;
 import pepse.world.dayNight.SunHalo;
+import pepse.world.trees.Leaf;
 
 import java.awt.*;
 
@@ -20,7 +22,7 @@ public class PepseGameManager extends GameManager {
     private static final int GROUND_LAYER = Layer.STATIC_OBJECTS;
     private static final int SEED = 0;
     // duration of a single day in the game in seconds
-    private static final int DAY_CYCLE_LENGTH = 60;
+    private static final int DAY_CYCLE_LENGTH = 10;
 
     private static int SKY_LAYER = Layer.BACKGROUND;
     private static final int LAYERS_DIFF = 1;
@@ -67,6 +69,9 @@ public class PepseGameManager extends GameManager {
         createGameObjects();
         GameObject nightObject = Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions,
                 DAY_CYCLE_LENGTH);
+        for (int i = 0; i < 120; i +=40) {
+            Leaf leaf = new Leaf(new Vector2(20 + i, 20), gameObjects(), new RectangleRenderable(Color.YELLOW));
+        }
 
     }
 
