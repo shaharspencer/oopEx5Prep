@@ -7,6 +7,7 @@ import pepse.util.ColorSupplier;
 import pepse.util.NoiseGenerator;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Responsible for the creation and management of terrain.
@@ -16,6 +17,10 @@ public class Terrain {
     private final int groundLayer;
     private final Vector2 windowDimensions;
     private final int seed;
+
+    private final int FACTOR = 10;
+
+    private int BASIC_HEIGHT = Block.SIZE * FACTOR;
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private final NoiseGenerator noiseGenerator;
@@ -45,10 +50,20 @@ public class Terrain {
      * @param x - A number.
      * @return The ground height at the given location.
      */
-    public float groundHeightAt(float x){
-        double groundHeight = noiseGenerator.noise(x);
-        return (float) groundHeight;
-//        return 2;
+    public double groundHeightAt(float x){
+        Random rand = new Random();
+//        rand.ge
+        double sinX = Math.sin(x);
+        double noise = noiseGenerator.noise(x);
+//        int multBy = rand.nextInt(BASIC_HEIGHT);
+        double ret = Math.abs(BASIC_HEIGHT *
+                noise);
+        if (ret < Block.SIZE){
+            return Block.SIZE;
+        }
+        return Math.abs(BASIC_HEIGHT *
+               noise);
+//        return sinX * multBy;
     }
 
     /**
@@ -59,12 +74,14 @@ public class Terrain {
      */
     public void createInRange(int minX, int maxX){
         int lowerBound = minX;
-        int upperBound = maxX - Block.SIZE;
+//        int upperBound = maxX - Block.SIZE;
+        int upperBound = maxX;
         for (int x = lowerBound; x <= upperBound; x += Block.SIZE){
-            float y = groundHeightAt(x);
+            int y = (int) (int) groundHeightAt(x);
             Vector2 topLeftCorner = new Vector2(x ,y);
-            Block block = blockFactory.generateBlock(topLeftCorner);
-            gameObjects.addGameObject(block);
+//            Block block = blockFactory.generateBlock(topLeftCorner);
+//            gameObjects.addGameObject(block);
+            createInYRange(topLeftCorner);
         }
     }
 
@@ -73,7 +90,17 @@ public class Terrain {
      * create a pile of blocks until the floor
      * @param
      */
-    public void createInYRange(){
+    public void createInYRange(Vector2 topLeftCorner){
+        float yMinusDim = windowDimensions.y() - topLeftCorner.y();
+        int updateY = (int) (Math.floor((yMinusDim / Block.SIZE)) * Block.SIZE);
+
+        for (int i = (int) (windowDimensions.y() - Block.SIZE); i >= yMinusDim - Block.SIZE; i -= Block.SIZE){
+            Block block = blockFactory.generateBlock(
+                    new Vector2(
+                    topLeftCorner.x(),
+                    i));
+            gameObjects.addGameObject(block);
+        }
 
     }
 }
