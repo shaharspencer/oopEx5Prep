@@ -1,9 +1,12 @@
 package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
+import danogl.gui.rendering.OvalRenderable;
+import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.world.Block;
 
+import java.awt.*;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -14,17 +17,12 @@ public class Tree {
     private static final String TREE_TAG = "tree";
     //TODO: CHANGE TREE MAX WIDTH AND HIGHT
     private static final int MAX_TREE_STUMP_WIDTH = 30;
-
-    //todo: remove this when implementing infinit world
-    private static final int WORLD_END_COORDINATE = 500;
     private static final int MAX_TREE_STUMP_HEIGHT = 300;
-    private static final int MAX_TREETOP_SIZE = 80;
     private static final int MAX_TREE_DISTANCE_FACTOR = 4;
-    private static final int MIN_TREE_WIDTH = 10;
     private static final int DEFAULT_STUMP_WIDTH = Block.SIZE;
 
-    private static final int DEFAULT_STUMP_HEIGHT = 220;
-
+    private static final int DEFAULT_STUMP_HEIGHT = 250;
+    private static final Color LEAF_COLOR = new Color(29, 105, 19);
     private final int treeLayer;
     private final int seed;
     private final Random rand;
@@ -40,6 +38,7 @@ public class Tree {
         this.rand = new Random();
         //rand.setSeed(seed);
     }
+//todo: update documentation
 
     /**
      * Creates trees in the provided range:
@@ -52,45 +51,41 @@ public class Tree {
 
         for (int startPositionX = minX;
              startPositionX <= maxX - MAX_TREE_STUMP_WIDTH;
-             startPositionX = startPositionX +
-                     (rand.nextInt(MAX_TREE_DISTANCE_FACTOR)* DEFAULT_STUMP_WIDTH+ DEFAULT_STUMP_WIDTH)) {
+             startPositionX += rand.nextInt(MAX_TREE_DISTANCE_FACTOR) *
+                     DEFAULT_STUMP_WIDTH + DEFAULT_STUMP_WIDTH) {
 
             int stumpHeight = rand.nextInt(MAX_TREE_STUMP_HEIGHT);
-            if (stumpHeight<= DEFAULT_STUMP_WIDTH*2){
+            if (stumpHeight <= DEFAULT_STUMP_WIDTH * 3) {
                 stumpHeight = DEFAULT_STUMP_HEIGHT;
             }
-            //todo: try to fix this with lab support: in some cases the tree is one pixel above the floor
+            //todo: try to fix this with lab support: in some cases the tree is one pixel above the floor:
+            // answer - round down should fix it
             float startPositionY = yCoordinateCallback.apply((float) startPositionX);
-            Vector2 location = new Vector2(startPositionX, startPositionY-stumpHeight);
+            Vector2 location = new Vector2(startPositionX, startPositionY - stumpHeight);
 
             Vector2 stumpSize = new Vector2(DEFAULT_STUMP_WIDTH, stumpHeight);
-            Vector2 treetopSize = new Vector2(rand.nextInt(MAX_TREETOP_SIZE), rand.nextInt(MAX_TREETOP_SIZE));
-            SingleTree aTree = createSingleTree(location, stumpSize, treetopSize);
-            gameObjects.addGameObject(aTree, treeLayer);
+            int treetopRadius = (int) (stumpHeight*0.3);
+            SingleTree aTree = createSingleTree(location, stumpSize, treetopRadius);
+            gameObjects.addGameObject(aTree);
         }
     }
 
     /**
      * Creates a SingleTree object, with leafs, at location and according to dimensions
-     * @param topLeftCorner location to start tree from
+     *
+     * @param topLeftCorner   location to start tree from
      * @param stumpDimensions stump dimensions (width, height)
-     * @param treetopDimensions treetop possible dimensions (width, height)
-     * @return
+     * @param treetopRadius   treetop possible radius
+     * @return A SingleTree
      */
-    public SingleTree createSingleTree(Vector2 topLeftCorner, Vector2 stumpDimensions,
-                                       Vector2 treetopDimensions) {
-        SingleTree tree = new SingleTree(topLeftCorner, stumpDimensions);
-        //todo: make sure this float isn't bothering anything
-        Vector2 fixTreetopLocationBy = new Vector2(treetopDimensions.x()*(-0.5f),treetopDimensions.y());
-        Vector2 treetopLocation = topLeftCorner.add(fixTreetopLocationBy);
-        
-        /*
-        leafs get: location, game objects and renderable and add themselves to gameobject.
-        they have setColor method, and they move in the wind.
-         */
-
-        //SingleTree.sproutLeafs();
-
+    private SingleTree createSingleTree(Vector2 topLeftCorner, Vector2 stumpDimensions,
+                                       int treetopRadius) {
+        Vector2 treetopDimensions = new Vector2(treetopRadius, treetopRadius);
+        Vector2 treetopLocation =
+                topLeftCorner.add(treetopDimensions.mult(-0.5f).add(new Vector2(
+                        stumpDimensions.x()*0.5f,0)));
+        SingleTree tree = new SingleTree(topLeftCorner, stumpDimensions, gameObjects, treeLayer,
+                treetopLocation, treetopDimensions, rand);
         return tree;
     }
 }
