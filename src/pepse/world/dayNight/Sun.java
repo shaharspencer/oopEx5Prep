@@ -56,8 +56,14 @@ public class Sun {
                                 windowCenter.x() + (float) (Math.cos(angle) * windowCenter.x()),
                windowCenter.y ()+ (float) Math.sin(angle)* windowCenter.y()));};
         new Transition<Float>(sun,
-                m, (float) ((float) Math.PI * 1.5), (float) (Math.PI * 3.5), Transition.LINEAR_INTERPOLATOR_FLOAT, cycleLength, TRANSITION_LOOP,
+                m, (float) ((float) Math.PI * 1.5), (float) (Math.PI * 3.5),
+                Transition.LINEAR_INTERPOLATOR_FLOAT, cycleLength, TRANSITION_LOOP,
                null);
+        //todo: make the sun turn not in a perfect circle (oval)
+        //todo: Vector2 has a method "rotated" that rotates the vector accirding to a given angle. it saves
+        // the calculation of the consumer.
+        // todo: Vector2 has method multY and multX. we can use them to make it oval and not a circle.
+
     }
 
 
