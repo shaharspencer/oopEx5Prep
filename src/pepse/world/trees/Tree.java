@@ -1,8 +1,6 @@
 package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
-import danogl.gui.rendering.OvalRenderable;
-import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.world.Block;
 
@@ -14,7 +12,6 @@ import java.util.function.Function;
  * Responsible for the creation and management of trees.
  */
 public class Tree {
-    private static final String TREE_TAG = "tree";
     //TODO: CHANGE TREE MAX WIDTH AND HIGHT
     private static final int MAX_TREE_STUMP_WIDTH = 30;
     private static final int MAX_TREE_STUMP_HEIGHT = 300;
@@ -67,6 +64,7 @@ public class Tree {
             int treetopRadius = (int) (stumpHeight*0.3);
             SingleTree aTree = createSingleTree(location, stumpSize, treetopRadius);
             gameObjects.addGameObject(aTree);
+
         }
     }
 
