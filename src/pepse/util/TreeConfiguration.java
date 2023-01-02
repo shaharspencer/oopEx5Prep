@@ -1,0 +1,14 @@
+package pepse.util;
+
+import danogl.collisions.Layer;
+
+import java.awt.*;
+
+public class TreeConfiguration {
+    /* leaf definitions */
+    public static String LEAF_TAG = "leaf";
+    public static int LEAF_LAYER =  Layer.BACKGROUND + 3;
+    public static int[] LEAF_DIM = new int[]{13, 15, 17};
+
+    public static Color[] LEAF_COLORS = new Color[]{Color.GREEN};
+}
