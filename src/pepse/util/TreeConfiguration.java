@@ -31,4 +31,6 @@ public class TreeConfiguration {
 
     public static float LEAF_X_TRANSITION_TIME = 1f;
 
+    public static final int LEAF_SIZE = 15;
+
 }

@@ -63,7 +63,6 @@ public class Tree {
             int treetopRadius = (int) (stumpHeight*0.3);
             SingleTree aTree = createSingleTree(location, stumpSize, treetopRadius);
             gameObjects.addGameObject(aTree);
-            break;
         }
     }
 

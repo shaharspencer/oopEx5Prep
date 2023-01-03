@@ -7,6 +7,7 @@ import danogl.components.GameObjectPhysics;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.util.TreeConfiguration;
 
 import java.awt.*;
 import java.util.Random;
@@ -50,12 +51,13 @@ public class SingleTree extends GameObject {
     public void sproutLeafs(Vector2 treetopCenter, int treetopRadius) {
         //todo: change factors to static
         for (int i = 0;
-             i <= treetopRadius - TempLeaf.LEAF_SIZE;
-             i+=TempLeaf.LEAF_SIZE*0.25) {
+             i <= treetopRadius - TreeConfiguration.LEAF_SIZE;
+             i+=TreeConfiguration.LEAF_SIZE*0.25) {
             Vector2 currRadius = treetopCenter.add(Vector2.of(i, i));
             //for each possible angle to place the leaf
             //todo: find the right angle change
-            for (float angle = 0; angle <= 360 - TempLeaf.LEAF_SIZE; angle+=TempLeaf.LEAF_SIZE*0.3) {
+            for (float angle = 0; angle <= 360 - TreeConfiguration.LEAF_SIZE;
+                 angle+=TreeConfiguration.LEAF_SIZE*0.3) {
                 if(rand.nextInt(10)<=4){
                     Vector2 leafLocation = currRadius.rotated(angle).mult(i*0.01f).add(treetopCenter);
                     sproutALeaf(leafLocation);
