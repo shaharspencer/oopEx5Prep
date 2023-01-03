@@ -6,6 +6,7 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 /**
+ * s
  * Represents a single block (larger objects can be created from blocks).
  */
 public class Block extends GameObject {
