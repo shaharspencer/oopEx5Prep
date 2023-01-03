@@ -21,6 +21,7 @@ public class Avatar extends GameObject{
     private static final Color AVATAR_COLOR = Color.DARK_GRAY;
     private final AnimationRenderable rightAnimation;
     private final AnimationRenderable upAnimation;
+    private final AnimationRenderable leftAnimation;
 
     private Avatar avatar;
     private UserInputListener inputListener;
@@ -36,6 +37,9 @@ public class Avatar extends GameObject{
         this.rightAnimation = new AnimationRenderable(getAvatarConfigsRight(),
                 imageReader, true, 0.75);
         this.upAnimation = new AnimationRenderable(getAvatarConfigsUp(),
+                imageReader, true, 0.75);
+
+        this.leftAnimation = new AnimationRenderable(getAvatarConfigsLeft(),
                 imageReader, true, 0.75);
     }
     /**
@@ -93,12 +97,30 @@ public class Avatar extends GameObject{
         return DirImages;
     }
 
+    public static String[] getAvatarConfigsLeft(){
+
+        File dir = new File(
+                "C:\\Users\\User\\IdeaProjects\\oopEx5Prep\\" +
+                        "src\\pepse\\util\\AvatarImages\\retro_man\\left");
+        File[] directoryListing = dir.listFiles();
+
+        assert directoryListing != null;
+        String [] DirImages = new String[directoryListing.length];
+        int i = 0;
+        for (File child : directoryListing) {
+            DirImages[i] = child.getAbsolutePath();
+            i += 1;
+        }
+        return DirImages;
+    }
+
     public void update(float deltaTime) {
         super.update(deltaTime);
         float xVel = 0;
         if(inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
             xVel -= VELOCITY_X;
             transform().setVelocityX(xVel);
+            this.renderer().setRenderable(leftAnimation);
 
         }
 
