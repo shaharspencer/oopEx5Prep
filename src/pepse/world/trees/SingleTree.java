@@ -19,13 +19,11 @@ public class SingleTree extends GameObject {
     private static final String TREE_TAG = "tree";
     private static final Color STUMP_COLOR = new Color(94, 60, 39);
     private static final Renderable STUMP_RENDERABLE = new RectangleRenderable(STUMP_COLOR);
-    private static final Color LEAF_COLOR = new Color(43, 105, 19);
 
     private final GameObjectCollection gameObjects;
     private int leafLayer;
     private Random rand;
 
-    //private Leaf[] leafs;
 
     /**
      * Construct a new GameObject instance.
@@ -67,8 +65,7 @@ public class SingleTree extends GameObject {
     }
 
     public void sproutALeaf(Vector2 leafLocation) {
-        RectangleRenderable leafRenderable = new RectangleRenderable(LEAF_COLOR);
-        TempLeaf newLeaf = new TempLeaf(leafLocation, leafRenderable);
-        gameObjects.addGameObject(newLeaf, leafLayer);
+        LeafFactory leafFactory = new LeafFactory(gameObjects);
+        leafFactory.createLeaf(leafLocation);
     }
 }

@@ -2,6 +2,7 @@ package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
 import danogl.util.Vector2;
+import pepse.util.TreeConfiguration;
 import pepse.world.Block;
 
 import java.awt.*;
@@ -19,8 +20,6 @@ public class Tree {
     private static final int DEFAULT_STUMP_WIDTH = Block.SIZE;
 
     private static final int DEFAULT_STUMP_HEIGHT = 250;
-    private static final Color LEAF_COLOR = new Color(29, 105, 19);
-    private final int treeLayer;
     private final int seed;
     private final Random rand;
     private GameObjectCollection gameObjects;
@@ -31,7 +30,6 @@ public class Tree {
         this.gameObjects = gameObjects;
         this.yCoordinateCallback = yCoordinateCallback;
         this.seed = seed;
-        this.treeLayer = treeLayer;
         this.rand = new Random();
         //rand.setSeed(seed);
     }
@@ -50,7 +48,8 @@ public class Tree {
              startPositionX <= maxX - MAX_TREE_STUMP_WIDTH;
              startPositionX += rand.nextInt(MAX_TREE_DISTANCE_FACTOR) *
                      DEFAULT_STUMP_WIDTH + DEFAULT_STUMP_WIDTH) {
-
+            //todo: remove this
+            startPositionX += 120;
             int stumpHeight = rand.nextInt(MAX_TREE_STUMP_HEIGHT);
             if (stumpHeight <= DEFAULT_STUMP_WIDTH * 3) {
                 stumpHeight = DEFAULT_STUMP_HEIGHT;
@@ -64,7 +63,7 @@ public class Tree {
             int treetopRadius = (int) (stumpHeight*0.3);
             SingleTree aTree = createSingleTree(location, stumpSize, treetopRadius);
             gameObjects.addGameObject(aTree);
-
+            break;
         }
     }
 
@@ -82,8 +81,8 @@ public class Tree {
         Vector2 treetopLocation =
                 topLeftCorner.add(treetopDimensions.mult(-0.5f).add(new Vector2(
                         stumpDimensions.x()*0.5f,0)));
-        SingleTree tree = new SingleTree(topLeftCorner, stumpDimensions, gameObjects, treeLayer,
-                treetopLocation, treetopDimensions, rand);
+        SingleTree tree = new SingleTree(topLeftCorner, stumpDimensions, gameObjects,
+                TreeConfiguration.TREE_LAYER, treetopLocation, treetopDimensions, rand);
         return tree;
     }
 }

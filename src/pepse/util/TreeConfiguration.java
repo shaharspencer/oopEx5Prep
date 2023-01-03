@@ -7,11 +7,17 @@ import java.awt.*;
 public class TreeConfiguration {
     /* leaf definitions */
     public static String LEAF_TAG = "leaf";
-    public static int LEAF_LAYER =  Layer.BACKGROUND + 3;
+    //todo: check the layers
+    public static int LEAF_LAYER =  Layer.BACKGROUND + 201;
+
+    public static int TREE_LAYER = Layer.BACKGROUND + 2;
 
     public static int[] LEAF_DIM = new int[]{13, 15, 17};
 
-    public static Color[] LEAF_COLORS = new Color[]{Color.GREEN};
+    Color temp = new Color(91, 157, 74);
+    public static Color[] LEAF_COLORS = new Color[]{new Color(43, 105, 19),
+            new Color(33, 75, 28),
+            new Color(91, 157, 74)};
 
     public static int LEAF_FALL_VELOCITY = 50;
 
@@ -23,6 +29,6 @@ public class TreeConfiguration {
 
     public static int LEAF_MAX_X_VELOCITY = 10;
 
-    public static int LEAF_X_TRANSITION_TIME = 2;
+    public static float LEAF_X_TRANSITION_TIME = 1f;
 
 }
