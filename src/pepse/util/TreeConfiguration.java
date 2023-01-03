@@ -24,7 +24,6 @@ public class TreeConfiguration {
     public static int MAX_LEAF_FALL_TIME = 10;
 
     public static int MAX_LEAF_DEATH_TIME = 16;
-    // how long it takes the leaf to fade out
 
     public static int LEAF_FADEOUT_TIME = 5;
 
