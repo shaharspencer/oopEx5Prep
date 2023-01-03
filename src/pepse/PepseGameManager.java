@@ -25,7 +25,7 @@ public class PepseGameManager extends GameManager {
     private static final int GROUND_LAYER = Layer.STATIC_OBJECTS;
     private static final int SEED = 0;
     // duration of a single day in the game in seconds
-    private static final int DAY_CYCLE_LENGTH = 1000;
+    private static final int DAY_CYCLE_LENGTH = 60;
 
     private static int SKY_LAYER = Layer.BACKGROUND;
     private static final int LAYERS_DIFF = 1;
@@ -36,8 +36,6 @@ public class PepseGameManager extends GameManager {
     private static int TREE_LAYER = SUN_LAYER + LAYERS_DIFF;
 
     private static int LEAF_LAYER = SUN_LAYER + LAYERS_DIFF;
-
-
 
     static Vector2 windowSize = new Vector2(700, 500);
     private Vector2 windowDimensions;
@@ -67,6 +65,7 @@ public class PepseGameManager extends GameManager {
 
         GameObject nightObject = Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions,
                 DAY_CYCLE_LENGTH);
+        gameObjects().addGameObject(nightObject);
 
 
         createAvatar();
@@ -92,10 +91,6 @@ public class PepseGameManager extends GameManager {
         this.windowController = windowController;
 
         createGameObjects();
-        GameObject nightObject = Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions,
-                DAY_CYCLE_LENGTH);
-
-
     }
 
     public static void main(String[] args){

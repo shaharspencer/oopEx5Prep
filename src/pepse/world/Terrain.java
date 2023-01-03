@@ -50,7 +50,7 @@ public class Terrain {
      * @param x - A number.
      * @return The ground height at the given location.
      */
-    public double groundHeightAt(float x){
+    public float groundHeightAt(float x){
 
         double noise = noiseGenerator.noise(x);
 

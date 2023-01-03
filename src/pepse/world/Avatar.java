@@ -12,13 +12,17 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import java.io.File;
-public class Avatar extends GameObject{
 
+public class Avatar extends GameObject {
 
+    private static final String AVATAR_IMAGE_FOLDER_PATH = "./src/pepse/util/AvatarImages/retro_man/";
     private static final float VELOCITY_X = 400;
     private static final float VELOCITY_Y = -650;
     private static final float GRAVITY = 600;
     private static final Color AVATAR_COLOR = Color.DARK_GRAY;
+    private static final String AVATAR_IMAGE_RIGHT_FOLDER = "right";
+    private static final String AVATAR_IMAGE_UP_FOLDER = "up";
+    private static final String AVATAR_IMAGE_LEFT_FOLDER = "left";
     private final AnimationRenderable rightAnimation;
     private final AnimationRenderable upAnimation;
     private final AnimationRenderable leftAnimation;
@@ -26,7 +30,7 @@ public class Avatar extends GameObject{
     private Avatar avatar;
     private UserInputListener inputListener;
 
-    Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader){
+    Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader) {
 
         super(pos, Vector2.ONES.mult(50), new AnimationRenderable(getAvatarConfigsRight(),
                 imageReader, true, 0.75));
@@ -42,6 +46,7 @@ public class Avatar extends GameObject{
         this.leftAnimation = new AnimationRenderable(getAvatarConfigsLeft(),
                 imageReader, true, 0.75);
     }
+
     /**
      * This function creates an avatar that can travel the world and is followed by the camera. The can stand, walk, jump and fly, and never reaches the end of the world.
      * Parameters:
@@ -57,7 +62,7 @@ public class Avatar extends GameObject{
     public static Avatar create(GameObjectCollection gameObjects,
                                 int layer, Vector2 topLeftCorner,
                                 UserInputListener inputListener,
-                                ImageReader imageReader){
+                                ImageReader imageReader) {
         Vector2 avatarPlacement = new Vector2(250, 250);
 
         return new Avatar(avatarPlacement, inputListener, imageReader);
@@ -65,15 +70,18 @@ public class Avatar extends GameObject{
 
     }
 
-    public static String[] getAvatarConfigsRight(){
+    public static String[] getAvatarConfigsRight() {
 
-        File dir = new File(
-                "C:\\Users\\User\\IdeaProjects\\oopEx5Prep\\" +
+        File dir = new File(AVATAR_IMAGE_FOLDER_PATH+AVATAR_IMAGE_RIGHT_FOLDER);
+        /*
+                        "C:\\Users\\User\\IdeaProjects\\oopEx5Prep\\" +
                         "src\\pepse\\util\\AvatarImages\\retro_man\\right");
+         */
+
         File[] directoryListing = dir.listFiles();
 
         assert directoryListing != null;
-        String [] DirImages = new String[directoryListing.length];
+        String[] DirImages = new String[directoryListing.length];
         int i = 0;
         for (File child : directoryListing) {
             DirImages[i] = child.getAbsolutePath();
@@ -82,13 +90,17 @@ public class Avatar extends GameObject{
         return DirImages;
     }
 
-    public static String[] getAvatarConfigsUp(){
+    public static String[] getAvatarConfigsUp() {
 
-        File dir = new File("C:\\Users\\User\\IdeaProjects\\oopEx5Prep\\src\\pepse\\util\\AvatarImages\\retro_man\\up");
+        File dir = new File(AVATAR_IMAGE_FOLDER_PATH + AVATAR_IMAGE_UP_FOLDER);
+        /*
+        C:\\Users\\User\\IdeaProjects\\oopEx5Prep\\src\\pepse\\util\\AvatarImages\\retro_man\\up");
+
+         */
         File[] directoryListing = dir.listFiles();
 
         assert directoryListing != null;
-        String [] DirImages = new String[directoryListing.length];
+        String[] DirImages = new String[directoryListing.length];
         int i = 0;
         for (File child : directoryListing) {
             DirImages[i] = child.getAbsolutePath();
@@ -97,15 +109,18 @@ public class Avatar extends GameObject{
         return DirImages;
     }
 
-    public static String[] getAvatarConfigsLeft(){
+    public static String[] getAvatarConfigsLeft() {
 
-        File dir = new File(
+        File dir = new File(AVATAR_IMAGE_FOLDER_PATH + AVATAR_IMAGE_LEFT_FOLDER);
+        /*
+
                 "C:\\Users\\User\\IdeaProjects\\oopEx5Prep\\" +
                         "src\\pepse\\util\\AvatarImages\\retro_man\\left");
+         */
         File[] directoryListing = dir.listFiles();
 
         assert directoryListing != null;
-        String [] DirImages = new String[directoryListing.length];
+        String[] DirImages = new String[directoryListing.length];
         int i = 0;
         for (File child : directoryListing) {
             DirImages[i] = child.getAbsolutePath();
@@ -117,25 +132,25 @@ public class Avatar extends GameObject{
     public void update(float deltaTime) {
         super.update(deltaTime);
         float xVel = 0;
-        if(inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
             xVel -= VELOCITY_X;
             transform().setVelocityX(xVel);
             this.renderer().setRenderable(leftAnimation);
 
         }
 
-        if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
             xVel += VELOCITY_X;
             transform().setVelocityX(xVel);
             this.renderer().setRenderable(rightAnimation);
         }
-        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_DOWN)) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && inputListener.isKeyPressed(KeyEvent.VK_DOWN)) {
             physics().preventIntersectionsFromDirection(null);
             new ScheduledTask(this, .5f, false,
-                    ()->physics().preventIntersectionsFromDirection(Vector2.ZERO));
+                    () -> physics().preventIntersectionsFromDirection(Vector2.ZERO));
             return;
         }
-        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
             transform().setVelocityY(VELOCITY_Y);
             this.renderer().setRenderable(upAnimation);
         }

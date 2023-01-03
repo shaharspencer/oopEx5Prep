@@ -36,12 +36,8 @@ public class Sun {
             float cycleLength){
 
         OvalRenderable sunRenderable = new OvalRenderable(Color.YELLOW);
-        Vector2 topLeftCorner = new Vector2( 20,
-               20);
-
         Vector2 windowCenter = new Vector2(windowDimensions.x() /2, windowDimensions.y() /2);
-        GameObject sun = new GameObject(topLeftCorner, sunDimensions, sunRenderable);
-        sun.setCenter(windowCenter);
+        GameObject sun = new GameObject(Vector2.ZERO, sunDimensions, sunRenderable);
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         sun.setTag(suntag);
         gameObjects.addGameObject(sun, layer);
@@ -59,10 +55,9 @@ public class Sun {
                 m, (float) ((float) Math.PI * 1.5), (float) (Math.PI * 3.5),
                 Transition.LINEAR_INTERPOLATOR_FLOAT, cycleLength, TRANSITION_LOOP,
                null);
-        //todo: make the sun turn not in a perfect circle (oval)
-        //todo: Vector2 has a method "rotated" that rotates the vector accirding to a given angle. it saves
-        // the calculation of the consumer.
-        // todo: Vector2 has method multY and multX. we can use them to make it oval and not a circle.
+        //todo: consider changing the hight wher the sun "sets" so that it is closer to the floor.. or
+        // change the floor, cause it just looks strange now
+        //todo: consider changing to rotated
 
     }
 
