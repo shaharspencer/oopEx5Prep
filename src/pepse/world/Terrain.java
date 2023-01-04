@@ -64,7 +64,7 @@ public class Terrain {
             distFromFLoor = Block.SIZE;
         }
 
-        int distFromFloor_dividableBySize = (int) (Math.floor((distFromFLoor + PepseGameManager.VECTOR_ZERO.y())/ Block.SIZE) * Block.SIZE);
+        int distFromFloor_dividableBySize = (int) (Math.floor((distFromFLoor + (float) PepseGameManager.VECTOR_ZERO.y())/ Block.SIZE) * Block.SIZE);
         return windowDimensions.y() - distFromFloor_dividableBySize;
     }
 
