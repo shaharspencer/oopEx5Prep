@@ -89,6 +89,7 @@ public class PepseGameManager extends GameManager {
         this.soundReader = soundReader;
         this.inputListener = inputListener;
         this.windowController = windowController;
+        windowController.setTargetFramerate(70);
 
         createGameObjects();
     }
