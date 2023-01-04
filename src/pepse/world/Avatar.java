@@ -19,8 +19,8 @@ import static pepse.PepseGameManager.SEED;
 public class Avatar extends GameObject {
 
     private static final String AVATAR_IMAGE_FOLDER_PATH = "./src/pepse/util/AvatarImages/retro_man/";
-    private static final float VELOCITY_X = 400;
-    private static final float VELOCITY_Y = -650;
+    private static final float VELOCITY_X = 300;
+    private static final float VELOCITY_Y = -550;
     private static final float GRAVITY = 600;
     private static final Color AVATAR_COLOR = Color.DARK_GRAY;
     private static final String AVATAR_IMAGE_RIGHT_FOLDER = "right";
