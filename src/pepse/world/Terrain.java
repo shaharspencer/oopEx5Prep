@@ -13,12 +13,13 @@ import java.util.Random;
  * Responsible for the creation and management of terrain.
  */
 public class Terrain {
+    private static final double X_FACTOR = 0.01;
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
     private final int seed;
 
-    private final int FACTOR = 12;
+    private final int FACTOR = 20;
 
     private int BASIC_HEIGHT = Block.SIZE * FACTOR;
 
@@ -40,8 +41,7 @@ public class Terrain {
         this.windowDimensions = windowDimensions;
         this.seed = seed;
         this.noiseGenerator = new NoiseGenerator(seed);
-        this.blockFactory = new BlockFactory(new RectangleRenderable(
-                ColorSupplier.approximateColor(BASE_GROUND_COLOR)));
+        this.blockFactory = new BlockFactory();
     }
 
     /**
@@ -51,7 +51,7 @@ public class Terrain {
      * @return The ground height at the given location.
      */
     public float groundHeightAt(float x){
-        double noise = noiseGenerator.noise(x);
+        double noise = noiseGenerator.noise(X_FACTOR*x);
 
         double distFromFLoor = Math.abs(BASIC_HEIGHT * noise);
 
