@@ -3,8 +3,11 @@ package pepse.world;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+import pepse.PepseGameManager;
 import pepse.util.ColorSupplier;
 import pepse.util.NoiseGenerator;
+import pepse.util.TerrainConfiguration;
+import pepse.util.TreeConfiguration;
 
 import java.awt.*;
 import java.util.Random;
@@ -16,15 +19,15 @@ public class Terrain {
     private static final double X_FACTOR = 0.01;
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
-    private final Vector2 windowDimensions;
+    private static Vector2 windowDimensions;
     private final int seed;
 
-    private final int FACTOR = 20;
 
-    private int BASIC_HEIGHT = Block.SIZE * FACTOR;
+    private final NoiseGenerator noiseGenerator;
+    private static int BASIC_HEIGHT = Block.SIZE * 40;
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
-    private final NoiseGenerator noiseGenerator;
+
     private final BlockFactory blockFactory;
 
     /**
@@ -51,6 +54,8 @@ public class Terrain {
      * @return The ground height at the given location.
      */
     public float groundHeightAt(float x){
+
+
         double noise = noiseGenerator.noise(X_FACTOR*x);
 
         double distFromFLoor = Math.abs(BASIC_HEIGHT * noise);
@@ -59,7 +64,7 @@ public class Terrain {
             distFromFLoor = Block.SIZE;
         }
 
-        int distFromFloor_dividableBySize = (int) (Math.floor(distFromFLoor/ Block.SIZE) * Block.SIZE);
+        int distFromFloor_dividableBySize = (int) (Math.floor((distFromFLoor + PepseGameManager.VECTOR_ZERO.y())/ Block.SIZE) * Block.SIZE);
         return windowDimensions.y() - distFromFloor_dividableBySize;
     }
 
@@ -73,7 +78,7 @@ public class Terrain {
         int lowerBound = minX;
 //        int upperBound = maxX - Block.SIZE;
         int upperBound = maxX;
-        for (int x = lowerBound; x <= upperBound; x += Block.SIZE){
+        for (int x = lowerBound; x <= upperBound + Block.SIZE; x += Block.SIZE){
             int y = (int) groundHeightAt(x);
             Vector2 topLeftCorner = new Vector2(x ,y);
 //            Block block = blockFactory.generateBlock(topLeftCorner);
@@ -85,8 +90,11 @@ public class Terrain {
 
     /** given a top left corner of a block
      * create a pile of blocks until the floor
-     * @param
+     * if we are creating top 3 blocks, put them in layer in which the clash with the avatar
+     * else put in background
+     * @param topLeftCorner the top left corner of the top block
      */
+
     public void createInYRange(Vector2 topLeftCorner){
         float yCoord = topLeftCorner.y();
 
@@ -95,7 +103,15 @@ public class Terrain {
                     new Vector2(
                             topLeftCorner.x(),
                             i));
-            gameObjects.addGameObject(block);
+            if (Math.abs(yCoord-i) <= TerrainConfiguration.TOP_BLOCK_FACTOR * Block.SIZE)
+            {
+                gameObjects.addGameObject(block, TerrainConfiguration.getTopBlockLayer());
+
+            }
+            else {
+                gameObjects.addGameObject(block, TerrainConfiguration.getDefaultBlocksLayer());
+                // NEED TO MAKE THESE BLOCKS NOT COLLIDE WITH ANYTHING!
+            }
         }
 
     }

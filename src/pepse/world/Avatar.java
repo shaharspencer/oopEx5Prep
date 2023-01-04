@@ -7,11 +7,14 @@ import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
 import danogl.util.Vector2;
+import pepse.util.AvatarConfiguration;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import java.io.File;
+
+import static pepse.PepseGameManager.SEED;
 
 public class Avatar extends GameObject {
 
@@ -26,6 +29,7 @@ public class Avatar extends GameObject {
     private final AnimationRenderable rightAnimation;
     private final AnimationRenderable upAnimation;
     private final AnimationRenderable leftAnimation;
+    private final Terrain terrain;
 
     private Avatar avatar;
     private UserInputListener inputListener;
@@ -45,6 +49,7 @@ public class Avatar extends GameObject {
 
         this.leftAnimation = new AnimationRenderable(getAvatarConfigsLeft(),
                 imageReader, true, 0.75);
+        this.terrain = new Terrain(null, 0, Vector2.ZERO, SEED);
     }
 
     /**
@@ -63,7 +68,7 @@ public class Avatar extends GameObject {
                                 int layer, Vector2 topLeftCorner,
                                 UserInputListener inputListener,
                                 ImageReader imageReader) {
-        Vector2 avatarPlacement = new Vector2(250, 250);
+        Vector2 avatarPlacement = AvatarConfiguration.initialAvatarLocation;
 
         return new Avatar(avatarPlacement, inputListener, imageReader);
 
@@ -153,6 +158,13 @@ public class Avatar extends GameObject {
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
             transform().setVelocityY(VELOCITY_Y);
             this.renderer().setRenderable(upAnimation);
+        }
+
+
+        // set the avatar's minimal y height at groundHeightAt(x) + half of the avatar's body
+        float minYPlace = terrain.groundHeightAt(this.getCenter().x()) - (float) this.getDimensions().y() /2 + 0.01f;
+        if (this.getCenter().y() > minYPlace){
+            this.setCenter(new Vector2(this.getCenter().x(), minYPlace));
         }
     }
 
