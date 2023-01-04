@@ -51,18 +51,16 @@ public class Terrain {
      * @return The ground height at the given location.
      */
     public float groundHeightAt(float x){
-
         double noise = noiseGenerator.noise(x);
 
         double distFromFLoor = Math.abs(BASIC_HEIGHT * noise);
 
-        if (distFromFLoor< Block.SIZE){
+        if (distFromFLoor < Block.SIZE){
             distFromFLoor = Block.SIZE;
         }
 
         int distFromFloor_dividableBySize = (int) (Math.floor(distFromFLoor/ Block.SIZE) * Block.SIZE);
         return windowDimensions.y() - distFromFloor_dividableBySize;
-
     }
 
     /**
