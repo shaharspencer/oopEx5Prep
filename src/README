@@ -1,0 +1,21 @@
+זה קורה בגלל שהמשחק לא יודע להתמודד עם ככ הרבה התנגשויות(העלים קרקע אווטר וכו). כמה הצעות שיעזרו למנוע את זה-
+1. ההתנגשות של הקרקע עם שאר האובייקטים רק בשתי שכבות העליונות של הקרקע.
+2. להוסיף oncollision באווטר ולשים את המהירןת 0 כאשר הוא צתנגש עם רצפה.
+3. להוריד את המהירות של האווטר.
+4.להגדיל את גודל הBlock.
+5. להוריד את כמות העצים/עלים.
+
+מיי שעוד לא יודע אפשר ליצור UML באינטלאגי אוטומטי
+
+
+// made avatar only collide with top 3 layers
+
+// BUGS:
+// i set the avatar to only be able to have a minimal y height of (shown in the avatar update method). BUT it gets stuck in all kinds of places
+// couldnt do the leaf angle
+
+avatar went through the trees :(
+
+check if bloakc have to be at Layer.static_
+
+check that randomality is ניתנת לשחזור

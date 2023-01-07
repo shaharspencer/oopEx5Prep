@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class NoiseGenerator {
     private double seed;
-    private long default_size;
+    private static long default_size;
     private int[] p;
     private int[] permutation;
 
