@@ -49,7 +49,7 @@ public class Sun {
 
         Consumer<Float> m = (Float angle)-> {
                 sun.setCenter(new Vector2(
-                                windowCenter.x() + (float) (Math.cos(angle) * windowCenter.x()),
+                                windowCenter.x() - (float) (Math.cos(angle) * windowCenter.x()),
                windowCenter.y ()+ (float) Math.sin(angle)* windowCenter.y()));};
         new Transition<Float>(sun,
                 m, (float) ((float) Math.PI * 1.5), (float) (Math.PI * 3.5),

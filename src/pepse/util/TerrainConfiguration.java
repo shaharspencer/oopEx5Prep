@@ -11,6 +11,10 @@ public class TerrainConfiguration {
     // the tag for the topmost block
     public static String TOP_BLOCK_TAG = "top_block";
 
+    public static String LOW_BLOCK_TAG = "lower_block";
+
+
+
 
     // creating collecetion of colors the block can have
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
@@ -29,7 +33,7 @@ public class TerrainConfiguration {
     }
 
 
-    public static int DEFAULT_BLOCKS_LAYER = Layer.BACKGROUND + 15;
+    public static int DEFAULT_BLOCKS_LAYER = TOP_BLOCKS_LAYER -1;
 
     public static int getDefaultBlocksLayer(){
         return DEFAULT_BLOCKS_LAYER;

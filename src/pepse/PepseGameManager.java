@@ -8,15 +8,19 @@ import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
+import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.AvatarConfiguration;
 import pepse.util.TerrainConfiguration;
+import pepse.util.TreeConfiguration;
 import pepse.util.UIConfiguration;
+import pepse.world.InfiniteWorld;
 import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.dayNight.Night;
 import pepse.world.dayNight.Sun;
 import pepse.world.dayNight.SunHalo;
+import pepse.world.trees.Leaf;
 import pepse.world.trees.Tree;
 import pepse.world.Avatar;
 
@@ -49,38 +53,77 @@ public class PepseGameManager extends GameManager {
     private WindowController windowController;
     private GameObject sun;
     private Avatar avatar;
+    private InfiniteWorld infiniteWorldCreator;
+    public Terrain terrain;
+    public Tree treesManager;
 
     PepseGameManager() {
         super("", windowSize);
     }
 
 
+    /**
+     * creates all game objects
+     */
     public void createGameObjects() {
-
 
         createAvatar();
 
+        createInfiniteWorld();
 
+        createSky();
 
-        Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
-        Terrain terrain = new Terrain(gameObjects(), GROUND_LAYER, windowDimensions, SEED);
-        terrain.createInRange(-500, (int) windowDimensions.x());
+        createNight();
 
-        this.sun = Sun.create(gameObjects(), SUN_LAYER, windowDimensions, DAY_CYCLE_LENGTH);
-        Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions, DAY_CYCLE_LENGTH);
-        SunHalo.create(gameObjects(), HALO_LAYER, sun, new Color(255, 255, 0, 20));
-        Tree treesManager = new Tree(gameObjects(), terrain::groundHeightAt, SEED, HALO_LAYER);
-        treesManager.createInRange(-500, (int) windowDimensions.x());
-
-        Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions,
-                DAY_CYCLE_LENGTH);
+        createSun();
 
 
     }
 
+    private void createSun() {
+        this.sun = Sun.create(gameObjects(), SUN_LAYER, windowDimensions, DAY_CYCLE_LENGTH);
+        SunHalo.create(gameObjects(), HALO_LAYER, sun, new Color(255, 255, 0, 20));
+    }
+
+    private void createNight() {
+        Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions, DAY_CYCLE_LENGTH);
+    }
+
+    private void createSky() {
+        Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
+    }
+
+    /**
+     * initializes an infinite world object and the world according to avatars location
+     */
+    private void createInfiniteWorld() {
+        this.terrain = new Terrain(gameObjects(), GROUND_LAYER, windowDimensions, SEED);
+
+        this.treesManager = new Tree(gameObjects(), terrain::groundHeightAt, SEED, HALO_LAYER);
+
+
+        this.infiniteWorldCreator = new InfiniteWorld(this, terrain::createInRange,
+                terrain::deleteInRange,
+                treesManager::createInRange,
+                treesManager::deleteInRange,
+                avatar::getCenter,
+                this.windowDimensions);
+
+        infiniteWorldCreator.updateByAvatarLocation();
+        gameObjects().layers().shouldLayersCollide(TerrainConfiguration.getTopBlockLayer(),
+                TreeConfiguration.LEAF_LAYER, true);
+
+    }
+
+    /**
+     * creates avatar object and sets that camera on it
+     * defines which layers should collide with the avatar's layer
+     */
+
     private void createAvatar() {
-        this.avatar = Avatar.create(gameObjects(), UIConfiguration.AVATAR_LAYER, Vector2.ZERO, inputListener, imageReader);
-        this.VECTOR_ZERO = windowController.getWindowDimensions().mult(0.5f);
+        this.avatar = Avatar.create(gameObjects(), UIConfiguration.AVATAR_LAYER,
+                Vector2.ZERO, inputListener, imageReader);
+        VECTOR_ZERO = windowController.getWindowDimensions().mult(0.5f);
         gameObjects().addGameObject(avatar, AvatarConfiguration.AVATAR_LAYER);
         setCamera(new Camera(avatar, Vector2.ZERO,
                 windowController.getWindowDimensions(),
@@ -90,6 +133,22 @@ public class PepseGameManager extends GameManager {
                 TerrainConfiguration.getTopBlockLayer(), true);
         gameObjects().layers().shouldLayersCollide(AvatarConfiguration.AVATAR_LAYER,
                 Layer.DEFAULT, true);
+
+    }
+
+    /**
+     * updates world by avatars location via infiniteWorld object
+     * @param deltaTime The time, in seconds, that passed since the last invocation
+     *                  of this method (i.e., since the last frame). This is useful
+     *                  for either accumulating the total time that passed since some
+     *                  event, or for physics integration (i.e., multiply this by
+     *                  the acceleration to get an estimate of the added velocity or
+     *                  by the velocity to get an estimate of the difference in position).
+     */
+    @Override
+    public void update(float deltaTime){
+        super.update(deltaTime);
+        infiniteWorldCreator.updateByAvatarLocation();
     }
 
 
@@ -106,8 +165,6 @@ public class PepseGameManager extends GameManager {
         this.inputListener = inputListener;
         this.windowController = windowController;
         windowController.setTargetFramerate(70);
-
-
 
         createGameObjects();
 

@@ -31,21 +31,24 @@ public class TreeConfiguration {
 
 
     // how long the leaf will take before it starts falling - choose a random int in this range
-    public static int MAX_LEAF_FALL_TIME = 60;
+    public static int MAX_LEAF_FALL_TIME = 1000;
 
     // we choose a randomnumber in this range for the leaf to stay dead
-    public static int MAX_LEAF_DEATH_TIME = 16;
+    public static int MAX_LEAF_DEATH_TIME = 3;
 
     // how long it takes the leaf the fadeout when it starts dying
-    public static int LEAF_FADEOUT_TIME = 5;
+    public static int LEAF_FADEOUT_TIME = 20;
 
     // the velocity on x dimension while the leaf falls
-    public static int LEAF_MAX_X_VELOCITY = 2;
+    public static float LEAF_MAX_X_VELOCITY = 10;
 
     // the transition time for the leaf going back and forth on x dimension while it falls
-    public static float LEAF_X_TRANSITION_TIME = 1f;
+    public static float LEAF_X_TRANSITION_TIME = 2;
 
     // the leaf size (will be a square)
     public static final int LEAF_SIZE = 15;
+
+    // how long the leaf waits before it start blowing in the wind
+    public static final int WIND_WAIT_TIME = 5;
 
 }
