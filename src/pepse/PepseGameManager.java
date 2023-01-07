@@ -55,18 +55,15 @@ public class PepseGameManager extends GameManager {
 
         Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
         Terrain terrain = new Terrain(gameObjects(), GROUND_LAYER, windowDimensions, SEED);
-        terrain.createInRange(0, (int) windowDimensions.y());
+        terrain.createInRange(0, (int) windowDimensions.x());
 
         this.sun = Sun.create(gameObjects(), SUN_LAYER, windowDimensions, DAY_CYCLE_LENGTH);
         Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions, DAY_CYCLE_LENGTH);
         SunHalo.create(gameObjects(), HALO_LAYER, sun, new Color(255, 255, 0, 20));
         Tree treesManager = new Tree(gameObjects(), terrain::groundHeightAt, SEED, HALO_LAYER);
-        treesManager.createInRange(0, (int) windowDimensions.y());
+        treesManager.createInRange(0, (int) windowDimensions.x());
 
-        GameObject nightObject = Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions,
-                DAY_CYCLE_LENGTH);
-        gameObjects().addGameObject(nightObject);
-
+        Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions, DAY_CYCLE_LENGTH);
 
         createAvatar();
 
