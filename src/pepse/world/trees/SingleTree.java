@@ -11,6 +11,7 @@ import pepse.util.TreeConfiguration;
 
 import java.awt.*;
 import java.util.Random;
+import java.util.Set;
 
 
 /**
@@ -22,8 +23,9 @@ public class SingleTree extends GameObject {
     private static final Renderable STUMP_RENDERABLE = new RectangleRenderable(STUMP_COLOR);
 
     private final GameObjectCollection gameObjects;
-    private int leafLayer;
-    private Random rand;
+    private final Random rand;
+
+    private final Set<GameObject> treeObjects;
 
 
     /**
@@ -43,13 +45,14 @@ public class SingleTree extends GameObject {
         physics().setMass(GameObjectPhysics.IMMOVABLE_MASS);
         setTag(TREE_TAG);
         this.gameObjects = gameObjects;
-        this.leafLayer = leafLayer;
         Vector2 treetopCenter = treetopLocation.add(treetopDimensions.mult(0.5f));
-        sproutLeafs(treetopCenter, (int) dimensions.x());
+        Set<Leaf> = sproutLeafs(treetopCenter, (int) dimensions.x());
+        this.treeObjects =
     }
 
-    public void sproutLeafs(Vector2 treetopCenter, int treetopRadius) {
+    public Set<Leaf> sproutLeafs(Vector2 treetopCenter, int treetopRadius) {
         //todo: change factors to static
+        Set<Leaf> = new Set();
         for (int i = 0;
              i <= treetopRadius - TreeConfiguration.LEAF_SIZE;
              i+=TreeConfiguration.LEAF_SIZE*0.25) {
@@ -57,7 +60,7 @@ public class SingleTree extends GameObject {
             //for each possible angle to place the leaf
             //todo: find the right angle change
             for (float angle = 0; angle <= 360 - TreeConfiguration.LEAF_SIZE;
-                 angle+=TreeConfiguration.LEAF_SIZE*0.3) {
+                 angle+=TreeConfiguration.LEAF_SIZE*0.2) {
                 if(rand.nextInt(10)<=4){
                     Vector2 leafLocation = currRadius.rotated(angle).mult(i*0.01f).add(treetopCenter);
                     sproutALeaf(leafLocation);
@@ -66,8 +69,9 @@ public class SingleTree extends GameObject {
         }
     }
 
-    public void sproutALeaf(Vector2 leafLocation) {
+    public Leaf sproutALeaf(Vector2 leafLocation) {
         LeafFactory leafFactory = new LeafFactory(gameObjects);
-        leafFactory.createLeaf(leafLocation);
+        Leaf leaf = leafFactory.createLeaf(leafLocation);
+        return leaf;
     }
 }
