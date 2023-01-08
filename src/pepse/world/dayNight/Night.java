@@ -37,7 +37,8 @@ public class Night {
         Renderable nightRectangle = new RectangleRenderable(Color.BLACK);
         GameObject nightObject = new GameObject(Vector2.ZERO, windowDimensions, nightRectangle);
         nightObject.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-//        gameObjects.addGameObject(nightObject, layer);
+        //todo: add night
+        //gameObjects.addGameObject(nightObject, layer);
         nightObject.setTag(NIGHT_TAG);
 
         new Transition<Float>(nightObject,
