@@ -10,8 +10,8 @@ import danogl.util.Vector2;
 import pepse.util.TreeConfiguration;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 
 /**
@@ -23,50 +23,63 @@ public class SingleTree extends GameObject {
     private static final Renderable STUMP_RENDERABLE = new RectangleRenderable(STUMP_COLOR);
 
     private final GameObjectCollection gameObjects;
-    private final Random rand;
+    private int leafLayer;
+    private Random rand;
 
-    private final Set<GameObject> treeObjects;
+    private HashSet<Leaf> leaves;
+    //todo: make sure stump is also removed
 
 
     /**
      * Construct a new GameObject instance.
      *
-     * @param topLeftCorner Position of the object, in window coordinates (pixels).
+     * @param stumpTopLeftCorner Position of the object, in window coordinates (pixels).
      *                      Note that (0,0) is the top-left corner of the window.
-     * @param dimensions    Width and height in window coordinates.
+     * @param stumpDimensions    Width and height in window coordinates.
      */
-    public SingleTree(Vector2 topLeftCorner, Vector2 dimensions, GameObjectCollection gameObjects,
+    public SingleTree(Vector2 stumpTopLeftCorner, Vector2 stumpDimensions, GameObjectCollection gameObjects,
                       int leafLayer,
-                      Vector2 treetopLocation, Vector2 treetopDimensions,
+                      Vector2 treetopCenter, int treetopRadius,
                       Random rand) {
-        super(topLeftCorner, dimensions, STUMP_RENDERABLE);
+        super(stumpTopLeftCorner, stumpDimensions, STUMP_RENDERABLE);
         this.rand = rand;
+
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         physics().setMass(GameObjectPhysics.IMMOVABLE_MASS);
         setTag(TREE_TAG);
         this.gameObjects = gameObjects;
-        Vector2 treetopCenter = treetopLocation.add(treetopDimensions.mult(0.5f));
-        Set<Leaf> = sproutLeafs(treetopCenter, (int) dimensions.x());
-        this.treeObjects =
+        this.leafLayer = leafLayer;
+        this.leaves = new HashSet<>();
+
+        sproutLeafs(treetopCenter, treetopRadius);
     }
 
-    public Set<Leaf> sproutLeafs(Vector2 treetopCenter, int treetopRadius) {
+    public void removeLeafs(){
+        for (Leaf leaf: leaves){
+            gameObjects.removeGameObject(leaf, TreeConfiguration.LEAF_LAYER);
+        }
+        this.leaves = new HashSet<>();
+    }
+
+    public void sproutLeafs(Vector2 treetopCenter, int treetopRadius) {
         //todo: change factors to static
-        Set<Leaf> = new Set();
-        for (int i = 0;
-             i <= treetopRadius - TreeConfiguration.LEAF_SIZE;
-             i+=TreeConfiguration.LEAF_SIZE*0.25) {
-            Vector2 currRadius = treetopCenter.add(Vector2.of(i, i));
-            //for each possible angle to place the leaf
+        this.leaves = new HashSet<>();
+
+        for (int currentRadiusSize = 0;
+             currentRadiusSize <= treetopRadius - TreeConfiguration.LEAF_SIZE;
+             currentRadiusSize+=TreeConfiguration.LEAF_SIZE*0.25) {
             //todo: find the right angle change
             for (float angle = 0; angle <= 360 - TreeConfiguration.LEAF_SIZE;
-                 angle+=TreeConfiguration.LEAF_SIZE*0.2) {
+                 angle+=TreeConfiguration.LEAF_SIZE*0.3) {
                 if(rand.nextInt(10)<=4){
-                    Vector2 leafLocation = currRadius.rotated(angle).mult(i*0.01f).add(treetopCenter);
-                    sproutALeaf(leafLocation);
+                    Vector2 leafLocation =
+                            Vector2.of(currentRadiusSize,currentRadiusSize).rotated(angle).add(treetopCenter);
+                    Leaf leaf = sproutALeaf(leafLocation);
+                    this.leaves.add(leaf);
                 }
             }
         }
+
     }
 
     public Leaf sproutALeaf(Vector2 leafLocation) {

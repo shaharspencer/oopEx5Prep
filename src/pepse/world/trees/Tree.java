@@ -2,40 +2,49 @@ package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
 import danogl.util.Vector2;
+import pepse.util.TerrainConfiguration;
 import pepse.util.TreeConfiguration;
 import pepse.world.Block;
 
 import java.awt.*;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Responsible for the creation and management of trees.
  */
 public class Tree {
-    //TODO: CHANGE TREE MAX WIDTH AND HIGHT
-    private static final int MAX_TREE_STUMP_WIDTH = 30;
-    private static final int MAX_TREE_STUMP_HEIGHT = 300;
+    //######## static fields ########
     private static final int MAX_TREE_DISTANCE_FACTOR = 4;
-    private static final int DEFAULT_STUMP_WIDTH = Block.SIZE;
 
-    private static final int DEFAULT_STUMP_HEIGHT = 250;
+
+    //######## private fields ########
+
     private final int seed;
-    private final Random rand;
-    private GameObjectCollection gameObjects;
-    private Function<Float, Float> yCoordinateCallback;
+    private final GameObjectCollection gameObjects;
+    private final Function<Float, Float> yCoordinateCallback;
+    private final int treeLayer;
+    private LinkedList<SingleTree> existingTrees = new LinkedList<>();
 
+    //######## public Methods ########
+    //todo: add documentation
+    /**
+     *
+     * @param gameObjects
+     * @param yCoordinateCallback
+     * @param seed
+     * @param treeLayer
+     */
     public Tree(GameObjectCollection gameObjects, Function<Float, Float> yCoordinateCallback, int seed,
                 int treeLayer) {
         this.gameObjects = gameObjects;
         this.yCoordinateCallback = yCoordinateCallback;
         this.seed = seed;
-        this.rand = new Random();
-        //rand.setSeed(seed);
+        this.treeLayer = treeLayer;
     }
-//todo: update documentation
 
+    //todo: update documentation
     /**
      * Creates trees in the provided range:
      * chooses randomly the distance between trees and the width & height of each tree's stump.
@@ -44,28 +53,96 @@ public class Tree {
      * @param maxX end of range
      */
     public void createInRange(int minX, int maxX) {
-
-        for (int startPositionX = minX;
-             startPositionX <= maxX - MAX_TREE_STUMP_WIDTH;
-             startPositionX += rand.nextInt(MAX_TREE_DISTANCE_FACTOR) *
-                     DEFAULT_STUMP_WIDTH + DEFAULT_STUMP_WIDTH) {
-            //todo: remove this
-            startPositionX += 120;
-            int stumpHeight = rand.nextInt(MAX_TREE_STUMP_HEIGHT);
-            if (stumpHeight <= DEFAULT_STUMP_WIDTH * 3) {
-                stumpHeight = DEFAULT_STUMP_HEIGHT;
+        ArrayList<SingleTree> treesInRange = new ArrayList<>();
+        //for every possible tree position (for every floor block)
+        for(int startPositionX = minX; startPositionX <= maxX - TreeConfiguration.MAX_TREE_STUMP_WIDTH;
+        startPositionX += TreeConfiguration.MIN_DIST_BETWEEN_TREES_FACTOR * Block.SIZE){
+            Random randX = new Random(Objects.hash(startPositionX, seed));
+            if(randX.nextInt(TreeConfiguration.TREE_SPROUT_PROBABILITY_RANGE) <
+                    TreeConfiguration.TREE_SPROUT_PROBABILITY){
+                SingleTree aTree = sproutATree(randX, startPositionX);
+                treesInRange.add(aTree);
             }
-            //todo: try to fix this with lab support: in some cases the tree is one pixel above the floor:
-            // answer - round down should fix it
-            float startPositionY = yCoordinateCallback.apply((float) startPositionX);
-            Vector2 location = new Vector2(startPositionX, startPositionY - stumpHeight);
-
-            Vector2 stumpSize = new Vector2(DEFAULT_STUMP_WIDTH, stumpHeight);
-            int treetopRadius = (int) (stumpHeight*0.3);
-            SingleTree aTree = createSingleTree(location, stumpSize, treetopRadius);
-            gameObjects.addGameObject(aTree);
         }
+
+        if (existingTrees.isEmpty()){
+            existingTrees.addAll(treesInRange);
+            return;
+        }
+        // if we want to add at beggining of list
+        if (existingTrees.get(0).getTopLeftCorner().x() > maxX){
+            existingTrees.addAll(0, existingTrees);
+            return;
+        }
+        // if we want to add to end of list
+        else if (existingTrees.getLast().getTopLeftCorner().x() < minX){
+            existingTrees.addAll(existingTrees.size(), treesInRange);
+            return;
+        }
+
     }
+
+    private SingleTree sproutATree(Random treeRandom, int startPositionX) {
+        int stumpHeight = treeRandom.nextInt(TreeConfiguration.MAX_TREE_STUMP_HEIGHT);
+        if (stumpHeight <= TreeConfiguration.DEFAULT_STUMP_WIDTH * 3) {
+            stumpHeight = TreeConfiguration.DEFAULT_STUMP_HEIGHT;
+        }
+        float startPositionY = yCoordinateCallback.apply((float) startPositionX);
+
+        Vector2 location = new Vector2(startPositionX, startPositionY - stumpHeight);
+
+        Vector2 stumpSize = new Vector2(TreeConfiguration.DEFAULT_STUMP_WIDTH, stumpHeight);
+        int treetopRadius = (int) (Math.ceil(stumpHeight/3f));
+
+        SingleTree aTree = createSingleTree(location, stumpSize, treetopRadius, treeRandom);
+        gameObjects.addGameObject(aTree, treeLayer);
+        return aTree;
+    }
+
+
+    public void deleteInRange(int startingSpot, Boolean removeToRight) {
+
+        // remove all objects to the left of the starting point from the game
+        if (!removeToRight){
+
+            LinkedList<SingleTree> newList = new LinkedList<>();
+            for (SingleTree tree: existingTrees){
+
+                if (tree.getTopLeftCorner().x() <= startingSpot){
+                    removeObjectsInColumnFromGame(tree);
+                }
+                else{
+                    newList.add(tree);
+                }
+
+            }
+            // remove all objects to the left of the starting point from the linked list
+            this.existingTrees = newList;
+        }
+
+        else{
+            LinkedList<SingleTree> newList = new LinkedList<>();
+            for (SingleTree tree: existingTrees){
+
+                if (tree.getTopLeftCorner().x() >= startingSpot){
+                    removeObjectsInColumnFromGame(tree);
+                }
+                else{
+                    newList.add(tree);
+                }
+            }
+            // remove all objects to the left of the starting point from the linked list
+            this.existingTrees = newList;
+        }
+
+    }
+
+    private void removeObjectsInColumnFromGame(SingleTree tree) {
+        tree.removeLeafs();
+        gameObjects.removeGameObject(tree, treeLayer);
+    }
+
+
 
     /**
      * Creates a SingleTree object, with leafs, at location and according to dimensions
@@ -76,13 +153,12 @@ public class Tree {
      * @return A SingleTree
      */
     private SingleTree createSingleTree(Vector2 topLeftCorner, Vector2 stumpDimensions,
-                                       int treetopRadius) {
-        Vector2 treetopDimensions = new Vector2(treetopRadius, treetopRadius);
-        Vector2 treetopLocation =
-                topLeftCorner.add(treetopDimensions.mult(-0.5f).add(new Vector2(
-                        stumpDimensions.x()*0.5f,0)));
+                                        int treetopRadius, Random randomPerX) {
+        Vector2 treetopCenter =
+                new Vector2(topLeftCorner.x()+stumpDimensions.x()*0.5f-TreeConfiguration.LEAF_SIZE*0.5f,
+                topLeftCorner.y());
         SingleTree tree = new SingleTree(topLeftCorner, stumpDimensions, gameObjects,
-                TreeConfiguration.TREE_LAYER, treetopLocation, treetopDimensions, rand);
+                treeLayer, treetopCenter, treetopRadius, randomPerX);
         return tree;
     }
 }

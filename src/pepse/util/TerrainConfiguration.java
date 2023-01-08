@@ -5,6 +5,7 @@ import danogl.collisions.Layer;
 import java.awt.*;
 
 public class TerrainConfiguration {
+
     // number of blocks we want the avatar the clash with
     public static final int TOP_BLOCK_FACTOR = 3;
 

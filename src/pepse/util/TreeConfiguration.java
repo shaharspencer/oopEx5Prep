@@ -1,10 +1,22 @@
 package pepse.util;
 
 import danogl.collisions.Layer;
+import pepse.world.Block;
 
 import java.awt.*;
 
 public class TreeConfiguration {
+    /* tree stump definitions */
+    public static final int MAX_TREE_STUMP_WIDTH = 30;
+    public static final int MAX_TREE_STUMP_HEIGHT = 300;
+    public static final int DEFAULT_STUMP_WIDTH = Block.SIZE;
+    public static final int DEFAULT_STUMP_HEIGHT = 250;
+    public static final int TREE_SPROUT_PROBABILITY = 4;
+    public static final int TREE_SPROUT_PROBABILITY_RANGE = 20;
+    public static final int MIN_DIST_BETWEEN_TREES_FACTOR = 2;
+    //TODO: CHANGE TREE MAX WIDTH AND HIGHT?
+
+
 
     /* leaf definitions */
     public static String LEAF_TAG = "leaf";

@@ -16,28 +16,21 @@ import java.awt.event.KeyEvent;
 
 import java.io.File;
 
-import static pepse.PepseGameManager.SEED;
-
 public class Avatar extends GameObject {
     private static final String AVATAR_IMAGE_FOLDER_PATH = "./src/pepse/util/assets/retro_man/";
     private static final float VELOCITY_X = 250;
-    private static final float VELOCITY_Y = -500;
+    private static final float VELOCITY_Y = -700;
     private static final float GRAVITY = 500;
-
     private static final String AVATAR_IMAGE_RIGHT_FOLDER = "right";
     private static final String AVATAR_IMAGE_UP_FOLDER = "up";
     private static final String AVATAR_IMAGE_LEFT_FOLDER = "left";
     private final AnimationRenderable rightAnimation;
     private final AnimationRenderable upAnimation;
     private final AnimationRenderable leftAnimation;
-    private final Terrain terrain;
-
-
-    private Avatar avatar;
     private UserInputListener inputListener;
 
 
-    Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader) {
+    public Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader) {
 
         super(pos, Vector2.ONES.mult(50), new AnimationRenderable(getAvatarConfigsRight(),
                 imageReader, true, 0.75));
@@ -50,7 +43,7 @@ public class Avatar extends GameObject {
 
         this.leftAnimation = new AnimationRenderable(getAvatarConfigsLeft(),
                 imageReader, true, 0.75);
-        this.terrain = new Terrain(null, 0, Vector2.ZERO, SEED);
+        //this.terrain = new Terrain(null, 0, Vector2.ZERO, SEED);
 
         setPhysics();
 
@@ -108,7 +101,7 @@ public class Avatar extends GameObject {
     }
 
     /**
-     * returns a list of strings representing paths to avatar renderables for flying
+     * returns a list of strings representing paths to avatar renderables for jumping
      * @return String[] renderables
      */
 
@@ -159,6 +152,8 @@ public class Avatar extends GameObject {
         @Override
         public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
+        //todo: make sure the avatar doesnt collide with floor or trees.
+
         // if we crashed into something lower than us, set y velocity to be 0
         if (other.getCenter().y() > this.getCenter().y()){
             setVelocity(new Vector2 (this.getVelocity().x(), 0));
@@ -180,13 +175,15 @@ public class Avatar extends GameObject {
         super.update(deltaTime);
 
         respondToPressedKey();
-
-        // set the avatar's minimal y height at groundHeightAt(x) + half of the avatar's body
+        //todo: check if the section below with different numbers helps with sinking into the floor
+        /*
+                // set the avatar's minimal y height at groundHeightAt(x) + half of the avatar's body
         float minYPlace = terrain.groundHeightAt(this.getCenter().x()) -
                 (float) this.getDimensions().y() /2 + 0.01f;
         if (this.getCenter().y() > minYPlace){
             this.setCenter(new Vector2(this.getCenter().x(), minYPlace));
         }
+         */
     }
 
     /**
@@ -209,6 +206,12 @@ public class Avatar extends GameObject {
         }
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
             upKeyIsPressed();
+        }
+        //todo: add flying
+        //todo: remove this
+        if (inputListener.isKeyPressed(KeyEvent.VK_R)){
+            Vector2 temp = this.getCenter();
+            System.out.println(temp);
         }
     }
 
