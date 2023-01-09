@@ -28,13 +28,12 @@ public class TerrainConfiguration {
 
 
     // define layers for
-    public static int TOP_BLOCKS_LAYER = Layer.STATIC_OBJECTS;
     public static int getTopBlockLayer(){
         return TOP_BLOCKS_LAYER;
     }
 
-
-    public static int DEFAULT_BLOCKS_LAYER = TOP_BLOCKS_LAYER -1;
+    public static int DEFAULT_BLOCKS_LAYER = Layer.STATIC_OBJECTS;
+    public static int TOP_BLOCKS_LAYER = DEFAULT_BLOCKS_LAYER - 1;
 
     public static int getDefaultBlocksLayer(){
         return DEFAULT_BLOCKS_LAYER;

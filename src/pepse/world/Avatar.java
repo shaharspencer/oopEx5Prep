@@ -8,15 +8,17 @@ import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
 import danogl.util.Vector2;
-import pepse.util.AvatarConfiguration;
-import pepse.util.TerrainConfiguration;
+import pepse.util.configurations.AvatarConfiguration;
+import pepse.util.configurations.TerrainConfiguration;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import java.io.File;
 
 public class Avatar extends GameObject {
+    private static final String AVATAR_IMAGE_STANDING_FOLDER = "standing";
+    private static final double TIME_BETWEEN_CLIPS = 0.75;
+    private final AnimationRenderable standingAnimation;
     private static final String AVATAR_IMAGE_FOLDER_PATH = "./src/pepse/util/assets/retro_man/";
     private static final float VELOCITY_X = 250;
     private static final float VELOCITY_Y = -700;
@@ -32,21 +34,43 @@ public class Avatar extends GameObject {
 
     public Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader) {
 
-        super(pos, Vector2.ONES.mult(50), new AnimationRenderable(getAvatarConfigsRight(),
-                imageReader, true, 0.75));
+        super(pos, Vector2.ONES.mult(50f), new AnimationRenderable(getAvatarConfigsStanding(),
+                imageReader, true, TIME_BETWEEN_CLIPS));
 
         this.inputListener = inputListener;
-        this.rightAnimation = new AnimationRenderable(getAvatarConfigsRight(),
-                imageReader, true, 0.75);
+        this.rightAnimation = new AnimationRenderable(
+                getAvatarConfigsRight(),
+                imageReader, true, TIME_BETWEEN_CLIPS);
         this.upAnimation = new AnimationRenderable(getAvatarConfigsUp(),
-                imageReader, true, 0.75);
+                imageReader, true, TIME_BETWEEN_CLIPS);
 
         this.leftAnimation = new AnimationRenderable(getAvatarConfigsLeft(),
-                imageReader, true, 0.75);
+                imageReader, true, TIME_BETWEEN_CLIPS);
         //this.terrain = new Terrain(null, 0, Vector2.ZERO, SEED);
-
+        this.standingAnimation = new AnimationRenderable(getAvatarConfigsStanding(),
+                imageReader, true, TIME_BETWEEN_CLIPS);
         setPhysics();
 
+    }
+
+    /**
+     * returns a list of strings representing paths to avatar renderables for standing
+     * @return String[] renderables
+     */
+    public static String[] getAvatarConfigsStanding() {
+
+        File dir = new File(AVATAR_IMAGE_FOLDER_PATH + AVATAR_IMAGE_STANDING_FOLDER);
+
+        File[] directoryListing = dir.listFiles();
+
+        assert directoryListing != null;
+        String[] DirImages = new String[directoryListing.length];
+        int i = 0;
+        for (File child : directoryListing) {
+            DirImages[i] = child.getAbsolutePath();
+            i += 1;
+        }
+        return DirImages;
     }
 
     /**
@@ -206,14 +230,19 @@ public class Avatar extends GameObject {
         }
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
             upKeyIsPressed();
+            return;
         }
-        //todo: add flying
-        //todo: remove this
-        if (inputListener.isKeyPressed(KeyEvent.VK_R)){
-            Vector2 temp = this.getCenter();
-            System.out.println(temp);
+
+        else if (this.getVelocity() == Vector2.ZERO){
+            noKeyIsPressedAndAvatarIsStanding();
         }
     }
+
+    private void noKeyIsPressedAndAvatarIsStanding() {
+        this.renderer().setRenderable(standingAnimation);
+        this.setDimensions((Vector2.ONES.mult(50f)));
+    }
+
 
     /**
      * when space key is pressed sends the avatar flying up and changes renderable to flying renderable
@@ -222,6 +251,7 @@ public class Avatar extends GameObject {
     private void upKeyIsPressed() {
         transform().setVelocityY(VELOCITY_Y);
         this.renderer().setRenderable(upAnimation);
+        this.setDimensions((Vector2.ONES.mult(50f)));
     }
 
     /**
@@ -243,6 +273,7 @@ public class Avatar extends GameObject {
         xVel += VELOCITY_X;
         transform().setVelocityX(xVel);
         this.renderer().setRenderable(rightAnimation);
+        this.setDimensions((Vector2.ONES.mult(50f)));
     }
 
     /**
@@ -254,7 +285,9 @@ public class Avatar extends GameObject {
         xVel -= VELOCITY_X;
         transform().setVelocityX(xVel);
         this.renderer().setRenderable(leftAnimation);
+        this.setDimensions((Vector2.ONES.mult(50f)));
     }
+
 
 
 }
