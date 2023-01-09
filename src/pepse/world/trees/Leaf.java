@@ -7,110 +7,114 @@ import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
-import pepse.util.TerrainConfiguration;
-import pepse.util.TreeConfiguration;
+import pepse.util.configurations.TreeConfiguration;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Random;
-import java.util.function.Consumer;
 
 import static danogl.components.Transition.TransitionType.TRANSITION_BACK_AND_FORTH;
-import static danogl.components.Transition.TransitionType.TRANSITION_ONCE;
-import static pepse.util.TerrainConfiguration.TOP_BLOCK_TAG;
-import static pepse.util.TreeConfiguration.MAX_LEAF_DEATH_TIME;
+import static pepse.util.configurations.TreeConfiguration.MAX_LEAF_DEATH_TIME;
 
-
+/**
+ * Class of leafs, each instance is a leaf in the game
+ */
 public class Leaf extends GameObject {
-    private static final int FALL_VELOCITY = 20;
+    //todo: I think they meant for it to extend Block
 
-    //    private static
-    public static final int LEAF_SIZE = 50;
-
-    private final Vector2 topLeftCorner;
+    //######## private fields ########
     private final GameObjectCollection gameObjects;
+    private final Vector2 initialCenter;
+    private final int leafDim;
+    private Random rand;
 
+    private Transition<Float> horizontalTransition;
+    private Transition<Float> wind_transition;
+    private Transition<Float> size_transition;
 
-    private Transition<Float> leafTransition;
-    private Transition<Float> xTransition;
+    //######## public methods ########
 
+    /**
+     * constructor for the leaf
+     *
+     * @param topLeftCorner   top left corner for leaf
+     * @param gameObjects     add leaf to these
+     * @param leafRenderebale renderable for leaf
+     * @param leafDim         dimensions of leaf
+     * @param seed            game seed
+     */
     public Leaf(Vector2 topLeftCorner, GameObjectCollection gameObjects,
-                RectangleRenderable leafRenderebale, int leafDim) {
+                RectangleRenderable leafRenderebale, int leafDim, int seed) {
         super(topLeftCorner, new Vector2(leafDim, leafDim), leafRenderebale);
-        this.topLeftCorner = topLeftCorner;
+        this.leafDim = leafDim;
+        this.rand = new Random(Objects.hash(this.getCenter(), seed));
+        this.initialCenter = this.getCenter();
         this.gameObjects = gameObjects;
 
-        gameObjects.addGameObject(this, TreeConfiguration.LEAF_LAYER);
-
-
-        this.renderer().setRenderableAngle((float) ((float) (5 / 6) * Math.PI));
-        this.setTag(TreeConfiguration.LEAF_TAG);
-
-        gameObjects.layers().shouldLayersCollide(TreeConfiguration.LEAF_LAYER, TerrainConfiguration.BLOCK_LAYER, true);
+        addToGameAndInitialize();
 
         moveLeaves();
-        makeLeavesFall();
 
+        initializeLifeCycle();
     }
 
     /**
-     * begins the cycle of the leaf life
-     * returns leaf to original placement, waits for a random life time
-     * and begins the leaf falling
+     * upon collsion set the velocity to zero
+     *
+     * @param other     The GameObject with which a collision occurred.
+     * @param collision Information regarding this collision.
      */
+    @Override
+    public void onCollisionEnter(GameObject other, Collision collision) {
+        super.onCollisionEnter(other, collision);
+//        this.removeComponent(horizontalTransition);
+//        super.update(0);
+        this.setVelocity(Vector2.ZERO);
+    }
 
+    //######## private methods ########
+
+    /**
+     * adds leaf game object to game and sets its tag
+     */
+    private void addToGameAndInitialize() {
+        gameObjects.addGameObject(this, TreeConfiguration.LEAF_LAYER);
+        this.setTag(TreeConfiguration.LEAF_TAG);
+    }
+
+    /**
+     * begins life cycle: chooses a wait time and begins to make leaf fall
+     */
+    private void initializeLifeCycle() {
+        float waitTime = rand.nextInt(TreeConfiguration.MAX_LEAF_FALL_TIME);
+        new ScheduledTask(this, waitTime, false, this::makeLeavesFall);
+    }
+
+    /**
+     * starts the fall of the leaf and the fadeout
+     * starts a horizontal transition for during the fall
+     */
     private void makeLeavesFall() {
-
-        Random rand = new Random();
-
-        float waitTimeCycle = rand.nextInt(TreeConfiguration.MAX_LEAF_FALL_TIME);
-
-        new ScheduledTask(
-                this,
-                waitTimeCycle,
-                false,
-                this::duringAndAfterFall);
-    }
-
-
-    /**
-     * sets a velocity to the leaf
-     * and begins a fadeout
-     * calls a function for the end of the fadeout: afterleavesFall
-     */
-    private void duringAndAfterFall()
-    {
-        if (xTransition != null){
-            this.addComponent(xTransition);
-        }
 
         this.renderer().fadeOut(TreeConfiguration.LEAF_FADEOUT_TIME, this::afterLeavesFall);
         this.transform().setVelocityY(TreeConfiguration.LEAF_FALL_VELOCITY);
-        Consumer<Float> velocityConsumer = (Float velocity)-> this.transform().setVelocityX(velocity);
-        this.xTransition = new Transition<Float>(this,
-                velocityConsumer,
-                (float)
-                        -TreeConfiguration.LEAF_MAX_X_VELOCITY,
-                (float) TreeConfiguration.LEAF_MAX_X_VELOCITY,
+
+        this.horizontalTransition = new Transition<>(this, (speed) ->
+                this.transform().setVelocityX(speed),
+                TreeConfiguration.LEAF_MAX_X_VELOCITY, -TreeConfiguration.LEAF_MAX_X_VELOCITY,
                 Transition.LINEAR_INTERPOLATOR_FLOAT,
                 TreeConfiguration.LEAF_X_TRANSITION_TIME, TRANSITION_BACK_AND_FORTH,
                 null);
-
     }
 
 
     /***
-     * called after the fadeout is finished
-     * sets object velocity to zero, returns leaf to original spot
-     * and
+     * called after the fadeout is finished, sets object velocity to zero, returns leaf to original spot
+     * after a waitTime
      */
     private void afterLeavesFall() {
-
-        this.removeComponent(xTransition);
-
-        Random rand = new Random();
+        this.setVelocity(Vector2.ZERO);
         float waitTimeCycle = rand.nextInt(MAX_LEAF_DEATH_TIME);
-
-
         new ScheduledTask(
                 this,
                 waitTimeCycle,
@@ -118,66 +122,69 @@ public class Leaf extends GameObject {
                 this::returnToOriginalPlacement);
     }
 
+    /**
+     * returns leaf to original placement (by center), sets velocity and fadeout to 0
+     */
+    private void returnToOriginalPlacement() {
+        this.setCenter(initialCenter);
+        this.setVelocity(Vector2.ZERO);
+        this.renderer().fadeIn(0);
+        //todo: ask lab support about this
+        this.removeComponent(this.horizontalTransition);
+        this.removeComponent(this.wind_transition);
+        this.removeComponent(this.size_transition);
+        initializeLifeCycle();
+    }
+
 
     /**
-     * upon a collision with an object, sets velocity to zero - aka stops the leaf
-     * @param other The GameObject with which a collision occurred.
-     * @param collision Information regarding this collision.
-     *                  A reasonable elastic behavior can be achieved with:
-     *                  setVelocity(getVelocity().flipped(collision.getNormal()));
+     * moves leafs in wind, starts moving them after a random waitTime
      */
-    @Override
-    public void onCollisionEnter(GameObject other, Collision collision) {
-        super.onCollisionEnter(other, collision);
-        this.transform().setVelocityY(0);
-        if (xTransition != null){
-            this.removeComponent(xTransition);
-
-        }
-    }
-
-
-    private void returnToOriginalPlacement(){
-        this.transform().setVelocityY(0);
-        this.renderer().fadeIn(0);
-        this.setTopLeftCorner(topLeftCorner);
-        makeLeavesFall();
-    }
-
-
-
     private void moveLeaves() {
-        Random rand = new Random();
-        float waitTime = rand.nextFloat() * 2;
-        new ScheduledTask(
-                this,
-                waitTime,
-                false,
-                this::updateLeafAngle);
+        float waitTime = rand.nextInt(TreeConfiguration.WIND_WAIT_TIME);
+        new ScheduledTask(this, waitTime, false, this::moveBackAndForth);
     }
 
-    private void setLeafColor(Color color){
-        RectangleRenderable re = new RectangleRenderable(color);
-        this.renderer().setRenderable(re);
-    }
+    /**
+     * moves the leaves back and forth in the wind
+     */
+    private void moveBackAndForth() {
 
-    private void updateLeafAngle(){
-
-        Consumer<Float> angleConsumer = (Float angle)-> {this.renderer().setRenderableAngle(angle);
-            this.setDimensions(this.getDimensions());
-        };
-        new Transition<Float>(this,
-                angleConsumer, (float) (Math.PI * ((float) 5/6)), (float) (Math.PI* (float) 2),
-                Transition.LINEAR_INTERPOLATOR_FLOAT,
-                1, TRANSITION_ONCE,
+        //move from side to side
+        this.wind_transition = new Transition<>(this, (angle) ->
+                this.renderer().setRenderableAngle(angle),
+                TreeConfiguration.LEAF_SIDE_OF_WIND_MOVEMENT *
+                        TreeConfiguration.LEAF_SIDE_MOVEMENT_FACTOR,
+                -1 * TreeConfiguration.LEAF_SIDE_OF_WIND_MOVEMENT *
+                        TreeConfiguration.LEAF_SIDE_MOVEMENT_FACTOR,
+                Transition.CUBIC_INTERPOLATOR_FLOAT,
+                TreeConfiguration.LEAF_WIND_MOVEMENT_TRANSITION_TIME,
+                TRANSITION_BACK_AND_FORTH,
                 null);
 
+        //todo: can we turn this also off when the leaf hits the ground?
 
+        // change size
+        this.size_transition = new Transition<>(this, (x) ->
+                this.setDimensions(Vector2.ONES.mult(x)),
+                (float) this.leafDim * TreeConfiguration.LEAF_CHANGE_SIZE_INITIAL_SIZE_FACTOR,
+                (float) this.leafDim * TreeConfiguration.LEAF_CHANGE_SIZE_FINALE_SIZE_FACTOR,
+                Transition.CUBIC_INTERPOLATOR_FLOAT,
+                TreeConfiguration.LEAF_CHANGE_SIZE_IN_WIND_TRANSITION_TIME,
+                TRANSITION_BACK_AND_FORTH,
+                null);
     }
 
-    @Override
-    public boolean shouldCollideWith(GameObject other){
-        return other.getTag().equals(TOP_BLOCK_TAG);
+    //todo: either use this in a bonus or remove it
+
+    /**
+     * a setter for the leaf color
+     *
+     * @param color color to set the leaf to
+     */
+    private void setLeafColor(Color color) {
+        RectangleRenderable re = new RectangleRenderable(color);
+        this.renderer().setRenderable(re);
     }
 
 }

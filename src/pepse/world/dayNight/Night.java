@@ -7,6 +7,7 @@ import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.util.configurations.DayNightConfiguration;
 
 import java.awt.*;
 
@@ -14,12 +15,7 @@ import java.awt.*;
  * Darkens the entire window.
  */
 public class Night {
-
-    private static final String NIGHT_TAG = "night";
-    //brightness at noon
-    private static float NOON_OPACITY = 0f;
-    // brightness at midnight
-    private static float MIDNIGHT_OPACITY = 0.5f;
+    //######## public methods ########
 
     /**
      * This function creates a black rectangular game object that covers the entire game window and changes
@@ -39,10 +35,11 @@ public class Night {
         nightObject.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         //todo: add night
         //gameObjects.addGameObject(nightObject, layer);
-        nightObject.setTag(NIGHT_TAG);
+        nightObject.setTag(DayNightConfiguration.NIGHT_TAG);
 
         new Transition<Float>(nightObject,
-                nightObject.renderer()::setOpaqueness, NOON_OPACITY, MIDNIGHT_OPACITY,
+                nightObject.renderer()::setOpaqueness, DayNightConfiguration.NOON_OPACITY,
+                DayNightConfiguration.MIDNIGHT_OPACITY,
                 Transition.CUBIC_INTERPOLATOR_FLOAT, cycleLength/2.0f,
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
 

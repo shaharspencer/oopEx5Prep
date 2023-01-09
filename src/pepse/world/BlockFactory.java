@@ -3,8 +3,8 @@ package pepse.world;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.util.ColorSupplier;
-import pepse.util.TerrainConfiguration;
+import pepse.util.configurations.ColorSupplier;
+import pepse.util.configurations.TerrainConfiguration;
 
 import java.awt.*;
 import java.util.Random;

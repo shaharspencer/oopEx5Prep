@@ -1,6 +1,7 @@
 package pepse.world;
 
 import danogl.util.Vector2;
+import pepse.util.configurations.BlockConfiguration;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -79,7 +80,7 @@ public class InfiniteWorldManager {
      * @return rounded number (rounded down)
      */
     private int roundToNearestToBlockSize(float num) {
-        return (int) (Math.floor((num / Block.SIZE)) * Block.SIZE);
+        return (int) (Math.floor((num / BlockConfiguration.SIZE)) * BlockConfiguration.SIZE);
     }
 
     /**
@@ -98,7 +99,7 @@ public class InfiniteWorldManager {
      */
     private void updateDueToMoveLeft() {
         //create additional world according to the avatar movement:
-        int createEndPosition = lastBlockToLeft - Block.SIZE;
+        int createEndPosition = lastBlockToLeft - BlockConfiguration.SIZE;
         int createStartPosition = createEndPosition - EXISTING_WORLD_SIZE_BUFFER;
 
         createObjectsInInRange(createStartPosition, createEndPosition);
@@ -108,7 +109,7 @@ public class InfiniteWorldManager {
         int deleteStartPosition = lastBlockToRight - EXISTING_WORLD_SIZE_BUFFER;
         deleteObjectsOnRightSide(deleteStartPosition);
         if (lastBlockToRight > deleteStartPosition) {
-            this.lastBlockToRight = deleteStartPosition - Block.SIZE;
+            this.lastBlockToRight = deleteStartPosition - BlockConfiguration.SIZE;
         }
     }
 
@@ -129,17 +130,17 @@ public class InfiniteWorldManager {
      */
     private void updateDueToMoveRight() {
         //create additional world according to the avatar movement:
-        int createStartPosition = lastBlockToRight + Block.SIZE;
-        int createEndPosition = createStartPosition + EXISTING_WORLD_SIZE_BUFFER - Block.SIZE;
+        int createStartPosition = lastBlockToRight + BlockConfiguration.SIZE;
+        int createEndPosition = createStartPosition + EXISTING_WORLD_SIZE_BUFFER - BlockConfiguration.SIZE;
 
         createObjectsInInRange(createStartPosition, createEndPosition);
-        this.lastBlockToRight = createEndPosition + Block.SIZE;
+        this.lastBlockToRight = createEndPosition + BlockConfiguration.SIZE;
 
         //delete world objects according to the avatar movement:
         int deleteStartPosition = lastBlockToLeft + EXISTING_WORLD_SIZE_BUFFER;
         deleteObjectsOnLeftSide(deleteStartPosition);
         if (lastBlockToLeft < deleteStartPosition) {
-            this.lastBlockToLeft = deleteStartPosition + Block.SIZE;
+            this.lastBlockToLeft = deleteStartPosition + BlockConfiguration.SIZE;
         }
     }
 

@@ -9,7 +9,7 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
-import pepse.util.*;
+import pepse.util.configurations.*;
 import pepse.world.InfiniteWorldManager;
 import pepse.world.Sky;
 import pepse.world.Terrain;
@@ -19,19 +19,13 @@ import pepse.world.dayNight.SunHalo;
 import pepse.world.trees.Tree;
 import pepse.world.Avatar;
 
-import java.awt.*;
-
 /**
  * Initializes and manages the game
  */
 public class PepseGameManager extends GameManager {
-    //######## public fields ########
-    //todo: understand what this means and why is it static when defined by an instance
-    //vector zero is used by Terrain when calculating the ground height
-    public static Vector2 VECTOR_ZERO;
-    public Terrain terrain;
 
     //######## private fields ########
+    private Terrain terrain;
     private Vector2 windowDimensions;
     private ImageReader imageReader;
     //TODO: either add sound or delete this field
@@ -94,7 +88,6 @@ public class PepseGameManager extends GameManager {
         this.inputListener = inputListener;
         this.windowController = windowController;
         windowController.setTargetFramerate(GameManagerConfiguration.TARGET_FRAMERATE);
-        VECTOR_ZERO = windowController.getWindowDimensions().mult(0.5f);
         setWhichLayersShouldCollide();
         createGameObjects();
     }
@@ -109,18 +102,24 @@ public class PepseGameManager extends GameManager {
         //todo: maybe change so that the Avatar Layer is in the GamaManagerConfiguration
         //for avatar:
         GameObject tempPixel = new GameObject(Vector2.ZERO, Vector2.ZERO, null);
-        int[] avatarCollisionLayers = {TerrainConfiguration.getTopBlockLayer(), Layer.DEFAULT};
-        setLayersCollision(AvatarConfiguration.AVATAR_LAYER, avatarCollisionLayers, tempPixel);
+        GameObject anotherTempPixel = new GameObject(Vector2.ZERO, Vector2.ZERO, null);
+
+        int[] avatarCollisionLayers = {TerrainConfiguration.TOP_BLOCKS_LAYER, TreeConfiguration.TREE_LAYER};
+        setLayersCollision(AvatarConfiguration.AVATAR_LAYER, avatarCollisionLayers, tempPixel,
+                anotherTempPixel);
 
         //for leafs:
-        int[] leafsCollisionLayers = {TerrainConfiguration.getTopBlockLayer()};
-        setLayersCollision(TreeConfiguration.LEAF_LAYER, leafsCollisionLayers, tempPixel);
+        int[] leafsCollisionLayers = {TerrainConfiguration.TOP_BLOCKS_LAYER};
+        setLayersCollision(TreeConfiguration.LEAF_LAYER, leafsCollisionLayers, tempPixel, anotherTempPixel);
     }
 
-    private void setLayersCollision(int firstLayer, int[] secondLayer, GameObject nullObject) {
+    private void setLayersCollision(int firstLayer, int[] secondLayer, GameObject nullObject,
+                                    GameObject anotherNullObject) {
         gameObjects().addGameObject(nullObject, firstLayer);
         for (int layer : secondLayer) {
+            gameObjects().addGameObject(anotherNullObject, layer);
             gameObjects().layers().shouldLayersCollide(firstLayer, layer, true);
+            gameObjects().removeGameObject(anotherNullObject, layer);
         }
         gameObjects().removeGameObject(nullObject, firstLayer);
 
@@ -159,8 +158,7 @@ public class PepseGameManager extends GameManager {
         this.terrain = new Terrain(gameObjects(), GameManagerConfiguration.GROUND_LAYER, windowDimensions,
                 GameManagerConfiguration.SEED);
 
-        this.treesManager = new Tree(gameObjects(), terrain::groundHeightAt, GameManagerConfiguration.SEED,
-                TreeConfiguration.TREE_LAYER);
+        this.treesManager = new Tree(gameObjects(), terrain::groundHeightAt, GameManagerConfiguration.SEED);
 
         this.infiniteWorldManagerCreator = new InfiniteWorldManager(terrain::createInRange,
                 terrain::deleteInRange,

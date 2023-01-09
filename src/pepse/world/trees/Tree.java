@@ -2,47 +2,41 @@ package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
 import danogl.util.Vector2;
-import pepse.util.TerrainConfiguration;
-import pepse.util.TreeConfiguration;
+import pepse.util.configurations.BlockConfiguration;
+import pepse.util.configurations.TreeConfiguration;
 import pepse.world.Block;
 
-import java.awt.*;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Responsible for the creation and management of trees.
  */
 public class Tree {
-    //######## static fields ########
-    private static final int MAX_TREE_DISTANCE_FACTOR = 4;
-
 
     //######## private fields ########
-
     private final int seed;
     private final GameObjectCollection gameObjects;
     private final Function<Float, Float> yCoordinateCallback;
-    private final int treeLayer;
     private LinkedList<SingleTree> existingTrees = new LinkedList<>();
+    private final LeafFactory leafFactory;
 
     //######## public Methods ########
 
-    /** Constructor of Tree object that manages all the trees (SingleTree) in the game.
-     * @param gameObjects collection of the gameObjects in the game
+    /**
+     * Constructor of Tree object that manages all the trees (SingleTree) in the game.
+     *
+     * @param gameObjects         collection of the gameObjects in the game
      * @param yCoordinateCallback callback to a method that calculates y coordinate of the floor provided x
-     *                           coordinate.
-     * @param seed used for setting the seed of the Random object of each tree (alongside its x coordinate)
-     * @param treeLayer number (int) representing the layer to which trees should be added when they are
-     *                  added to gameObjects.
+     *                            coordinate.
+     * @param seed                used for setting the seed of the Random object of each tree (alongside
+     *                            its x coordinate)
      */
-    public Tree(GameObjectCollection gameObjects, Function<Float, Float> yCoordinateCallback, int seed,
-                int treeLayer) {
+    public Tree(GameObjectCollection gameObjects, Function<Float, Float> yCoordinateCallback, int seed) {
         this.gameObjects = gameObjects;
         this.yCoordinateCallback = yCoordinateCallback;
         this.seed = seed;
-        this.treeLayer = treeLayer;
+        leafFactory = new LeafFactory(gameObjects, seed);
     }
 
 
@@ -56,7 +50,7 @@ public class Tree {
         ArrayList<SingleTree> treesInRange = new ArrayList<>();
         //for every possible tree position (for every floor block)
         for (int startPositionX = minX; startPositionX <= maxX - TreeConfiguration.MAX_TREE_STUMP_WIDTH;
-             startPositionX += TreeConfiguration.MIN_DIST_BETWEEN_TREES_FACTOR * Block.SIZE) {
+             startPositionX += TreeConfiguration.MIN_DIST_BETWEEN_TREES_FACTOR * BlockConfiguration.SIZE) {
             Random randX = new Random(Objects.hash(startPositionX, seed));
             if (randX.nextInt(TreeConfiguration.TREE_SPROUT_PROBABILITY_RANGE) <
                     TreeConfiguration.TREE_SPROUT_PROBABILITY) {
@@ -125,8 +119,8 @@ public class Tree {
      * Defines all the params required for sprouting a SingleTree in startingPosition, creates the tree and
      * adds it to the game.
      *
-     * @param treeRandom random object of this specific tree, which is only used for randomizing things for
-     *                  this tree.
+     * @param treeRandom     random object of this specific tree, which is only used for randomizing things for
+     *                       this tree.
      * @param startPositionX x coordinate of the left edge of the tree's stump.
      * @return the SingleTree created
      */
@@ -143,7 +137,7 @@ public class Tree {
         int treetopRadius = (int) (Math.ceil(stumpHeight / 3f));
 
         SingleTree aTree = createSingleTree(location, stumpSize, treetopRadius, treeRandom);
-        gameObjects.addGameObject(aTree, treeLayer);
+        gameObjects.addGameObject(aTree, TreeConfiguration.TREE_LAYER);
         return aTree;
     }
     //todo: did the screen coordinates change? where is (0,0)? we need to explain this in the readme.
@@ -163,7 +157,7 @@ public class Tree {
                 new Vector2(topLeftCorner.x() + stumpDimensions.x() * 0.5f - TreeConfiguration.LEAF_SIZE * 0.5f,
                         topLeftCorner.y());
         SingleTree tree = new SingleTree(topLeftCorner, stumpDimensions, gameObjects,
-                treeLayer, treetopCenter, treetopRadius, randomPerX);
+                treetopCenter, treetopRadius, randomPerX, leafFactory);
         return tree;
     }
 
@@ -174,7 +168,7 @@ public class Tree {
      */
     private void removeObjectsInColumnFromGame(SingleTree tree) {
         tree.removeLeafs();
-        gameObjects.removeGameObject(tree, treeLayer);
+        gameObjects.removeGameObject(tree, TreeConfiguration.TREE_LAYER);
     }
 
 }

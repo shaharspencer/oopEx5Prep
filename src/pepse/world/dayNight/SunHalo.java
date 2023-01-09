@@ -6,6 +6,7 @@ import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.util.configurations.DayNightConfiguration;
 
 import java.awt.*;
 
@@ -14,8 +15,7 @@ import java.awt.*;
  */
 public class SunHalo {
 
-    private static final String HALO_TAG = "sun halo";
-    private static final float HALO_SIZE_FACTOR = 1.5f;
+    //######## public methods ########
 
     /**
      * This function creates a halo around a given object that represents the sun. The halo will be tied to the given sun, and will always move with it.
@@ -28,14 +28,14 @@ public class SunHalo {
     public static GameObject create(GameObjectCollection gameObjects, int layer,
                                     GameObject sun, Color color) {
         Renderable haloRenderable = new OvalRenderable(color);
-        GameObject halo = new GameObject(sun.getCenter(), sun.getDimensions().mult(HALO_SIZE_FACTOR),
+        GameObject halo = new GameObject(sun.getCenter(),
+                sun.getDimensions().mult(DayNightConfiguration.HALO_SIZE_FACTOR),
                 haloRenderable);
         halo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         halo.addComponent(x -> halo.setCenter(sun.getCenter()));
 
         gameObjects.addGameObject(halo, layer);
-        halo.setTag(HALO_TAG);
+        halo.setTag(DayNightConfiguration.HALO_TAG);
         return halo;
     }
-
 }

@@ -6,6 +6,7 @@ import danogl.components.CoordinateSpace;
 import danogl.components.Transition;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
+import pepse.util.configurations.DayNightConfiguration;
 
 import java.awt.*;
 import java.util.function.BiConsumer;
@@ -14,11 +15,12 @@ import java.util.function.Consumer;
 import static danogl.components.Transition.TransitionType.TRANSITION_LOOP;
 import static danogl.components.Transition.TransitionType.TRANSITION_ONCE;
 
+/**
+ * Represents the sun - moves across the sky in an elliptical path.
+ */
 public class Sun {
 
-    private static String suntag = "sun";
-    private static Vector2 sunDimensions = new Vector2(100, 100);
-    private static int sunCoord = 20;
+    //######## public methods ########
 
     /**
      * This function creates a yellow circle that moves in the sky
@@ -37,14 +39,22 @@ public class Sun {
 
         OvalRenderable sunRenderable = new OvalRenderable(Color.YELLOW);
         Vector2 windowCenter = new Vector2(windowDimensions.x() /2, windowDimensions.y() /2);
-        GameObject sun = new GameObject(Vector2.ZERO, sunDimensions, sunRenderable);
+        GameObject sun = new GameObject(Vector2.ZERO, DayNightConfiguration.SUN_DIMENSIONS, sunRenderable);
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-        sun.setTag(suntag);
+        sun.setTag(DayNightConfiguration.SUN_TAG);
         gameObjects.addGameObject(sun, layer);
         createSunTransition(sun, cycleLength, windowCenter);
         return sun;
     }
 
+    //######## private methods ########
+
+    /**
+     * Creates the sun transition responsible for moving the sun in an oval orbit on the screen
+     * @param sun gameObject of the sun
+     * @param cycleLength length of day in the game, in seconds
+     * @param windowCenter location of the center of the game window
+     */
     private static void createSunTransition(GameObject sun, float cycleLength, Vector2 windowCenter){
 
         Consumer<Float> m = (Float angle)-> {
@@ -55,11 +65,5 @@ public class Sun {
                 m, (float) ((float) Math.PI * 1.5), (float) (Math.PI * 3.5),
                 Transition.LINEAR_INTERPOLATOR_FLOAT, cycleLength, TRANSITION_LOOP,
                null);
-        //todo: consider changing the hight wher the sun "sets" so that it is closer to the floor.. or
-        // change the floor, cause it just looks strange now
-        //todo: consider changing to rotated
-
     }
-
-
 }

@@ -1,4 +1,4 @@
-package pepse.util;
+package pepse.util.configurations;
 
 import danogl.collisions.Layer;
 import danogl.gui.rendering.RectangleRenderable;
@@ -11,7 +11,7 @@ public class TreeConfiguration {
     /* tree stump definitions */
     public static final int MAX_TREE_STUMP_WIDTH = 30;
     public static final int MAX_TREE_STUMP_HEIGHT = 300;
-    public static final int DEFAULT_STUMP_WIDTH = Block.SIZE;
+    public static final int DEFAULT_STUMP_WIDTH = BlockConfiguration.SIZE;
     public static final int DEFAULT_STUMP_HEIGHT = 250;
     public static final int TREE_SPROUT_PROBABILITY = 4;
     public static final int TREE_SPROUT_PROBABILITY_RANGE = 20;
