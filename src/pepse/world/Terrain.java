@@ -49,6 +49,7 @@ public class Terrain {
         this.windowDimensions = windowDimensions;
         this.seed = seed;
         this.blockFactory = new BlockFactory();
+        //todo: maybe not use the avatar configuration?
         Vector2 avatarLocation = AvatarConfiguration.initialAvatarLocation;
         this.vectorZero = windowDimensions.mult(0.5f).add(avatarLocation.mult(-1f));
 
@@ -97,7 +98,6 @@ public class Terrain {
      * This method creates terrain in a given range of x-values.
      * Creation is performed by columns, using createBlocksColumn.
      * Parameters:
-     *
      * @param minX - The lower bound of the given range (will be rounded to a multiple of Block.SIZE).
      * @param maxX - The upper bound of the given range (will be rounded to a multiple of Block.SIZE).
      */

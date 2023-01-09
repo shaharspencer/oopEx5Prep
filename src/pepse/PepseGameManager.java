@@ -3,21 +3,20 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
+import danogl.util.Counter;
 import danogl.util.Vector2;
 import pepse.util.configurations.*;
-import pepse.world.InfiniteWorldManager;
-import pepse.world.Sky;
-import pepse.world.Terrain;
+import pepse.world.*;
 import pepse.world.dayNight.Night;
 import pepse.world.dayNight.Sun;
 import pepse.world.dayNight.SunHalo;
 import pepse.world.trees.Tree;
-import pepse.world.Avatar;
 
 /**
  * Initializes and manages the game
@@ -34,6 +33,8 @@ public class PepseGameManager extends GameManager {
     private Avatar avatar;
     private InfiniteWorldManager infiniteWorldManagerCreator;
     private Tree treesManager;
+    private NumericLifeCounter energyCounter;
+
 
     //######## public methods ########
 
@@ -58,10 +59,12 @@ public class PepseGameManager extends GameManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
         infiniteWorldManagerCreator.updateByAvatarLocation();
+        this.energyCounter.setEnergyLevel(avatar.getEnergyLevel());
+
     }
 
     /**
-     * Initializes the game
+      * Initializes the game
      *
      * @param imageReader      Contains a single method: readImage, which reads an image from disk.
      *                         See its documentation for help.
@@ -130,7 +133,29 @@ public class PepseGameManager extends GameManager {
         createSky();
         createNight();
         createSun();
+
+
+        createEnergyCounter();
+
+        avatar.setTerrainCallback(terrain::groundHeightAt);
     }
+
+    /**
+     * initializes an energy counter object
+     */
+
+    private void createEnergyCounter() {
+        this.energyCounter = new NumericLifeCounter(
+                Vector2.ONES.mult(10)
+                , new Vector2(30, 30),
+                avatar.getEnergyLevel());
+        gameObjects().addGameObject(energyCounter);
+
+        this.energyCounter.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+
+    }
+
+
 
     /**
      * creates avatar object and sets the camera on it
@@ -139,6 +164,7 @@ public class PepseGameManager extends GameManager {
         this.avatar = Avatar.create(gameObjects(), UIConfiguration.AVATAR_LAYER,
                 Vector2.ZERO, inputListener, imageReader);
         gameObjects().addGameObject(avatar, AvatarConfiguration.AVATAR_LAYER);
+
 
         setCamera(new Camera(avatar, Vector2.ZERO,
                 windowController.getWindowDimensions(),
