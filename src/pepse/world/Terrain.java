@@ -68,7 +68,7 @@ public class Terrain {
         }
 
         int distFromFloor_dividableBySize = (int) (Math.floor((distFromFloor +
-                vectorZero.y())/ BlockConfiguration.SIZE)
+                ((float) vectorZero.y()))/ BlockConfiguration.SIZE)
                 * BlockConfiguration.SIZE);
         return windowDimensions.y() - distFromFloor_dividableBySize;
     }
