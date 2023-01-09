@@ -9,7 +9,6 @@ public class GameManagerConfiguration {
     public static final int SEED = 0;
     public static final String WINDOW_TITLE = "";
     public static final Color HALO_COLOR = new Color(255, 255, 0, 20);
-    //todo: make sure this size looks good on the university computers
     public static Vector2 WINDOW_SIZE = new Vector2(700, 500);
 
     public static final int GROUND_LAYER = Layer.STATIC_OBJECTS;
@@ -20,6 +19,6 @@ public class GameManagerConfiguration {
     public static int HALO_LAYER = SUN_LAYER + LAYERS_DIFF;
 
     // duration of a single day in the game in seconds
-    public static final int DAY_CYCLE_LENGTH = 60;
+    public static final int DAY_CYCLE_LENGTH = 30;
 
 }

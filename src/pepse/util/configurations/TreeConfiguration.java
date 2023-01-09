@@ -11,12 +11,11 @@ public class TreeConfiguration {
     /* tree stump definitions */
     public static final int MAX_TREE_STUMP_WIDTH = 30;
     public static final int MAX_TREE_STUMP_HEIGHT = 300;
-    public static final int DEFAULT_STUMP_WIDTH = BlockConfiguration.SIZE;
+    public static final int DEFAULT_STUMP_WIDTH = Block.SIZE;
     public static final int DEFAULT_STUMP_HEIGHT = 250;
     public static final int TREE_SPROUT_PROBABILITY = 4;
     public static final int TREE_SPROUT_PROBABILITY_RANGE = 20;
     public static final int MIN_DIST_BETWEEN_TREES_FACTOR = 2;
-    //TODO: CHANGE TREE MAX WIDTH AND HIGHT?
     public static final Color STUMP_COLOR = new Color(94, 60, 39);
     public static final Renderable STUMP_RENDERABLE = new RectangleRenderable(STUMP_COLOR);
     public static final String TREE_TAG = "tree_stump";
@@ -30,8 +29,6 @@ public class TreeConfiguration {
     public static final float LEAF_CHANGE_SIZE_INITIAL_SIZE_FACTOR = 1.5f;
     public static final float LEAF_CHANGE_SIZE_FINALE_SIZE_FACTOR = 1.05f;
     public static final int LEAF_CHANGE_SIZE_IN_WIND_TRANSITION_TIME = 1;
-
-    //todo: check the layers
 
     // the leaf layer - should not collide with anything
     public static int LEAF_LAYER =  Layer.BACKGROUND + 201;
@@ -81,6 +78,5 @@ public class TreeConfiguration {
 
     // how long the leaf waits before it start blowing in the wind
     public static final int WIND_WAIT_TIME = 5;
-    //todo: make sure in all of the configurations everything is used
-    //todo: change leafs to leaves
+
 }

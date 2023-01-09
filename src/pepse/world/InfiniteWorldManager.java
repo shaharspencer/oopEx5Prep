@@ -11,12 +11,12 @@ import java.util.function.Supplier;
  * game objects in it as the avatar moves.
  */
 public class InfiniteWorldManager {
+    private static final double BUFFER_FACTOR = 0.75;
     //######## private fields ########
 
     //the size of the world that exists at any time during the game is windowSixe + 2*Buffer
-    private final int EXISTING_WORLD_SIZE_BUFFER;
+    private final int existingWorldSizeBuffer;
     //used to define the buffer size
-    private static final double BUFFER_FACTOR = 0.75;
     private final BiConsumer<Integer, Integer> terrainCreator;
     private final BiConsumer<Integer, Boolean> blockDeletor;
     private final BiConsumer<Integer, Integer> treeCreator;
@@ -48,8 +48,7 @@ public class InfiniteWorldManager {
         this.treeDeletor = treeDeletor;
         this.avatarLocation = avatarLocation;
         this.windowDimensions = windowDimensions;
-
-        EXISTING_WORLD_SIZE_BUFFER = roundToNearestToBlockSize((float) BUFFER_FACTOR *
+        this.existingWorldSizeBuffer = roundToNearestToBlockSize((float) BUFFER_FACTOR *
                 windowDimensions.x());
         initializeAvatarLocationAndObjects();
     }
@@ -62,11 +61,11 @@ public class InfiniteWorldManager {
         int avatarNewLocation = (int) avatarLocation.get().x();
         // extend world on right side and delete left
 
-        if (avatarNewLocation > lastBlockToRight - EXISTING_WORLD_SIZE_BUFFER) {
+        if (avatarNewLocation > lastBlockToRight - existingWorldSizeBuffer) {
             updateDueToMoveRight();
         }
         // extend world on left side and delete right
-        else if (avatarNewLocation < lastBlockToLeft + EXISTING_WORLD_SIZE_BUFFER) {
+        else if (avatarNewLocation < lastBlockToLeft + existingWorldSizeBuffer) {
             updateDueToMoveLeft();
         }
     }
@@ -80,7 +79,7 @@ public class InfiniteWorldManager {
      * @return rounded number (rounded down)
      */
     private int roundToNearestToBlockSize(float num) {
-        return (int) (Math.floor((num / BlockConfiguration.SIZE)) * BlockConfiguration.SIZE);
+        return (int) (Math.floor((num / Block.SIZE)) * Block.SIZE);
     }
 
     /**
@@ -88,8 +87,8 @@ public class InfiniteWorldManager {
      * defines the current right-most and left-most ground blocks
      */
     private void initializeAvatarLocationAndObjects() {
-        this.lastBlockToLeft = roundToNearestToBlockSize(-EXISTING_WORLD_SIZE_BUFFER);
-        this.lastBlockToRight = roundToNearestToBlockSize(windowDimensions.x() + EXISTING_WORLD_SIZE_BUFFER);
+        this.lastBlockToLeft = roundToNearestToBlockSize(-existingWorldSizeBuffer);
+        this.lastBlockToRight = roundToNearestToBlockSize(windowDimensions.x() + existingWorldSizeBuffer);
         createObjectsInInRange(lastBlockToLeft, lastBlockToRight);
     }
 
@@ -99,17 +98,17 @@ public class InfiniteWorldManager {
      */
     private void updateDueToMoveLeft() {
         //create additional world according to the avatar movement:
-        int createEndPosition = lastBlockToLeft - BlockConfiguration.SIZE;
-        int createStartPosition = createEndPosition - EXISTING_WORLD_SIZE_BUFFER;
+        int createEndPosition = lastBlockToLeft - Block.SIZE;
+        int createStartPosition = createEndPosition - existingWorldSizeBuffer;
 
         createObjectsInInRange(createStartPosition, createEndPosition);
         this.lastBlockToLeft = createStartPosition;
 
         //delete world objects according to the avatar movement:
-        int deleteStartPosition = lastBlockToRight - EXISTING_WORLD_SIZE_BUFFER;
+        int deleteStartPosition = lastBlockToRight - existingWorldSizeBuffer;
         deleteObjectsOnRightSide(deleteStartPosition);
         if (lastBlockToRight > deleteStartPosition) {
-            this.lastBlockToRight = deleteStartPosition - BlockConfiguration.SIZE;
+            this.lastBlockToRight = deleteStartPosition - Block.SIZE;
         }
     }
 
@@ -130,17 +129,17 @@ public class InfiniteWorldManager {
      */
     private void updateDueToMoveRight() {
         //create additional world according to the avatar movement:
-        int createStartPosition = lastBlockToRight + BlockConfiguration.SIZE;
-        int createEndPosition = createStartPosition + EXISTING_WORLD_SIZE_BUFFER - BlockConfiguration.SIZE;
+        int createStartPosition = lastBlockToRight + Block.SIZE;
+        int createEndPosition = createStartPosition + existingWorldSizeBuffer - Block.SIZE;
 
         createObjectsInInRange(createStartPosition, createEndPosition);
-        this.lastBlockToRight = createEndPosition + BlockConfiguration.SIZE;
+        this.lastBlockToRight = createEndPosition + Block.SIZE;
 
         //delete world objects according to the avatar movement:
-        int deleteStartPosition = lastBlockToLeft + EXISTING_WORLD_SIZE_BUFFER;
+        int deleteStartPosition = lastBlockToLeft + existingWorldSizeBuffer;
         deleteObjectsOnLeftSide(deleteStartPosition);
         if (lastBlockToLeft < deleteStartPosition) {
-            this.lastBlockToLeft = deleteStartPosition + BlockConfiguration.SIZE;
+            this.lastBlockToLeft = deleteStartPosition + Block.SIZE;
         }
     }
 

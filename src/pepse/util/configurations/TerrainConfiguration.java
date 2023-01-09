@@ -1,10 +1,15 @@
 package pepse.util.configurations;
 
 import danogl.collisions.Layer;
+import pepse.world.Block;
 
 import java.awt.*;
 
 public class TerrainConfiguration {
+    public static final double X_NOISE_FACTOR = 0.01;
+    public static final int BASIC_HEIGHT = Block.SIZE * 12;
+
+    public static final String GROUND_TAG = "ground";
 
     // number of blocks we want the avatar the clash with
     public static final int TOP_BLOCK_FACTOR = 3;

@@ -20,7 +20,6 @@ import static pepse.util.configurations.TreeConfiguration.MAX_LEAF_DEATH_TIME;
  * Class of leafs, each instance is a leaf in the game
  */
 public class Leaf extends GameObject {
-    //todo: I think they meant for it to extend Block
 
     //######## private fields ########
     private final GameObjectCollection gameObjects;
@@ -67,8 +66,10 @@ public class Leaf extends GameObject {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-//        this.removeComponent(horizontalTransition);
-//        super.update(0);
+        this.removeComponent(this.horizontalTransition);
+        this.removeComponent(this.wind_transition);
+        this.removeComponent(this.size_transition);
+        super.update(0);
         this.setVelocity(Vector2.ZERO);
     }
 
@@ -129,10 +130,6 @@ public class Leaf extends GameObject {
         this.setCenter(initialCenter);
         this.setVelocity(Vector2.ZERO);
         this.renderer().fadeIn(0);
-        //todo: ask lab support about this
-        this.removeComponent(this.horizontalTransition);
-        this.removeComponent(this.wind_transition);
-        this.removeComponent(this.size_transition);
         initializeLifeCycle();
     }
 
@@ -162,7 +159,6 @@ public class Leaf extends GameObject {
                 TRANSITION_BACK_AND_FORTH,
                 null);
 
-        //todo: can we turn this also off when the leaf hits the ground?
 
         // change size
         this.size_transition = new Transition<>(this, (x) ->
@@ -174,17 +170,4 @@ public class Leaf extends GameObject {
                 TRANSITION_BACK_AND_FORTH,
                 null);
     }
-
-    //todo: either use this in a bonus or remove it
-
-    /**
-     * a setter for the leaf color
-     *
-     * @param color color to set the leaf to
-     */
-    private void setLeafColor(Color color) {
-        RectangleRenderable re = new RectangleRenderable(color);
-        this.renderer().setRenderable(re);
-    }
-
 }

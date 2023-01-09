@@ -28,8 +28,6 @@ public class PepseGameManager extends GameManager {
     private Terrain terrain;
     private Vector2 windowDimensions;
     private ImageReader imageReader;
-    //TODO: either add sound or delete this field
-    private SoundReader soundReader;
     private UserInputListener inputListener;
     private WindowController windowController;
     private GameObject sun;
@@ -84,7 +82,6 @@ public class PepseGameManager extends GameManager {
         this.windowDimensions = windowController.getWindowDimensions();
 
         this.imageReader = imageReader;
-        this.soundReader = soundReader;
         this.inputListener = inputListener;
         this.windowController = windowController;
         windowController.setTargetFramerate(GameManagerConfiguration.TARGET_FRAMERATE);
@@ -99,7 +96,6 @@ public class PepseGameManager extends GameManager {
      * Sets which layers should collide with each other in the game
      */
     private void setWhichLayersShouldCollide() {
-        //todo: maybe change so that the Avatar Layer is in the GamaManagerConfiguration
         //for avatar:
         GameObject tempPixel = new GameObject(Vector2.ZERO, Vector2.ZERO, null);
         GameObject anotherTempPixel = new GameObject(Vector2.ZERO, Vector2.ZERO, null);
@@ -142,7 +138,6 @@ public class PepseGameManager extends GameManager {
     private void createAvatar() {
         this.avatar = Avatar.create(gameObjects(), UIConfiguration.AVATAR_LAYER,
                 Vector2.ZERO, inputListener, imageReader);
-        //todo: maybe change so that the Avatar Layer is in the GamaManagerConfiguration
         gameObjects().addGameObject(avatar, AvatarConfiguration.AVATAR_LAYER);
 
         setCamera(new Camera(avatar, Vector2.ZERO,
@@ -154,7 +149,6 @@ public class PepseGameManager extends GameManager {
      * initializes an infinite world object and the world according to avatars location
      */
     private void createInfiniteWorld() {
-        //todo: maybe overload the constructor of Terrain and provide it with VECTOR_ZERO
         this.terrain = new Terrain(gameObjects(), GameManagerConfiguration.GROUND_LAYER, windowDimensions,
                 GameManagerConfiguration.SEED);
 
@@ -185,8 +179,6 @@ public class PepseGameManager extends GameManager {
         SunHalo.create(gameObjects(), GameManagerConfiguration.HALO_LAYER, sun,
                 GameManagerConfiguration.HALO_COLOR);
     }
-
-    //todo: maybe leaf is supposed to extend block
 
     public static void main(String[] args) {
         new PepseGameManager(GameManagerConfiguration.WINDOW_TITLE, GameManagerConfiguration.WINDOW_SIZE).run();

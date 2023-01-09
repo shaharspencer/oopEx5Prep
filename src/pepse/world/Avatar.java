@@ -93,17 +93,15 @@ public class Avatar extends GameObject {
      * Returns:
      * A newly created representing the avatar.
      */
-
     public static Avatar create(GameObjectCollection gameObjects,
                                 int layer, Vector2 topLeftCorner,
                                 UserInputListener inputListener,
                                 ImageReader imageReader) {
         Vector2 avatarPlacement = AvatarConfiguration.initialAvatarLocation;
-
         return new Avatar(avatarPlacement, inputListener, imageReader);
 
-
     }
+
     /**
      * returns a list of strings representing paths to avatar renderables for going right
      * @return String[] renderables
@@ -176,7 +174,6 @@ public class Avatar extends GameObject {
         @Override
         public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        //todo: make sure the avatar doesnt collide with floor or trees.
 
         // if we crashed into something lower than us, set y velocity to be 0
         if (other.getCenter().y() > this.getCenter().y()){
@@ -199,7 +196,6 @@ public class Avatar extends GameObject {
         super.update(deltaTime);
 
         respondToPressedKey();
-        //todo: check if the section below with different numbers helps with sinking into the floor
         /*
                 // set the avatar's minimal y height at groundHeightAt(x) + half of the avatar's body
         float minYPlace = terrain.groundHeightAt(this.getCenter().x()) -

@@ -8,10 +8,13 @@ import pepse.util.configurations.BlockConfiguration;
 
 /**
  * Represents a single block (larger objects can be created from blocks).
+ * In our game all the Block instances are ground blocks.
  */
-//todo: update documentation so it fits our use of blocks
 public class Block extends GameObject {
+    //######## public methods ########
+    public static int SIZE = 30;
 
+    //######## public methods ########
 
     /**
      * Construct a new Block instance.
@@ -21,9 +24,8 @@ public class Block extends GameObject {
      * @param renderable     A renderable to render as the block.
      */
     public Block(Vector2 topLeftCorner, Renderable renderable) {
-        super(topLeftCorner, Vector2.ONES.mult(BlockConfiguration.SIZE), renderable);
+        super(topLeftCorner, Vector2.ONES.mult(SIZE), renderable);
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         physics().setMass(GameObjectPhysics.IMMOVABLE_MASS);
-        setTag(BlockConfiguration.GROUND_TAG);
     }
 }

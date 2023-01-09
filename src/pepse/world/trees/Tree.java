@@ -50,7 +50,7 @@ public class Tree {
         ArrayList<SingleTree> treesInRange = new ArrayList<>();
         //for every possible tree position (for every floor block)
         for (int startPositionX = minX; startPositionX <= maxX - TreeConfiguration.MAX_TREE_STUMP_WIDTH;
-             startPositionX += TreeConfiguration.MIN_DIST_BETWEEN_TREES_FACTOR * BlockConfiguration.SIZE) {
+             startPositionX += TreeConfiguration.MIN_DIST_BETWEEN_TREES_FACTOR * Block.SIZE) {
             Random randX = new Random(Objects.hash(startPositionX, seed));
             if (randX.nextInt(TreeConfiguration.TREE_SPROUT_PROBABILITY_RANGE) <
                     TreeConfiguration.TREE_SPROUT_PROBABILITY) {
@@ -140,7 +140,6 @@ public class Tree {
         gameObjects.addGameObject(aTree, TreeConfiguration.TREE_LAYER);
         return aTree;
     }
-    //todo: did the screen coordinates change? where is (0,0)? we need to explain this in the readme.
 
 
     /**
