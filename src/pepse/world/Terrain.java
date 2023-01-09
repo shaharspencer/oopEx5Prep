@@ -2,9 +2,10 @@ package pepse.world;
 
 import danogl.collisions.GameObjectCollection;
 import danogl.util.Vector2;
-import pepse.PepseGameManager;
-import pepse.util.NoiseGenerator;
-import pepse.util.TerrainConfiguration;
+import pepse.util.configurations.AvatarConfiguration;
+import pepse.util.configurations.BlockConfiguration;
+import pepse.util.configurations.NoiseGenerator;
+import pepse.util.configurations.TerrainConfiguration;
 
 import java.util.*;
 
@@ -14,7 +15,8 @@ import java.util.*;
 public class Terrain {
     //######## static fields ########
     private static final double X_NOISE_FACTOR = 0.01;
-    private static final int BASIC_HEIGHT = Block.SIZE * 12;
+    private static final int BASIC_HEIGHT = BlockConfiguration.SIZE * 12;
+    private final Vector2 vectorZero;
 
     //######## public fields ########
     public LinkedList<ArrayList<Block>> blockColumns = new LinkedList<>();
@@ -30,6 +32,7 @@ public class Terrain {
     //######## public methods ########
 
     /**
+     * Constructor of Terrain
      * @param gameObjects - The collection of all participating game objects.
      * @param groundLayer - The number of the layer to which the created ground objects should be added.
      * @param windowDimensions - The dimensions of the windows.
@@ -37,12 +40,15 @@ public class Terrain {
      */
     public Terrain(danogl.collisions.GameObjectCollection gameObjects, int groundLayer,
                    danogl.util.Vector2 windowDimensions, int seed){
-
         this.gameObjects = gameObjects;
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
         this.seed = seed;
         this.blockFactory = new BlockFactory();
+        //todo: maybe not use the avatar configuration?
+        Vector2 avatarLocation = AvatarConfiguration.initialAvatarLocation;
+        this.vectorZero = windowDimensions.mult(0.5f).add(avatarLocation.mult(-1f));
+
     }
 
     /**
@@ -57,13 +63,13 @@ public class Terrain {
 
         double distFromFloor = Math.abs(BASIC_HEIGHT * noise);
 
-        if (distFromFloor < Block.SIZE){
-            distFromFloor = Block.SIZE;
+        if (distFromFloor < BlockConfiguration.SIZE){
+            distFromFloor = BlockConfiguration.SIZE;
         }
 
         int distFromFloor_dividableBySize = (int) (Math.floor((distFromFloor +
-                PepseGameManager.VECTOR_ZERO.y())/ Block.SIZE)
-                * Block.SIZE);
+                vectorZero.y())/ BlockConfiguration.SIZE)
+                * BlockConfiguration.SIZE);
         return windowDimensions.y() - distFromFloor_dividableBySize;
     }
 
@@ -98,7 +104,7 @@ public class Terrain {
         //todo: check if HashSet is better here instead of the internal ArrayList, and check if LinkedList
         // or linked hash set is better then the outer ArrayList.
         ArrayList<ArrayList<Block>> rangeBlocks = new ArrayList<>();
-        for (int x = lowerBound; x <= upperBound + Block.SIZE; x += Block.SIZE){
+        for (int x = lowerBound; x <= upperBound + BlockConfiguration.SIZE; x += BlockConfiguration.SIZE){
             int y = (int) groundHeightAt(x);
             Vector2 topLeftCorner = new Vector2(x ,y);
             rangeBlocks.add(createBlocksColumn(topLeftCorner));
@@ -188,17 +194,17 @@ public class Terrain {
     private ArrayList<Block> createBlocksColumn(Vector2 topLeftCorner){
 
         ArrayList<Block> columnList = new ArrayList<>();
-        for (int curBlockTopLeftYCoor = (int) (windowDimensions.y() - Block.SIZE);
-             curBlockTopLeftYCoor >= topLeftCorner.y() ; curBlockTopLeftYCoor -= Block.SIZE){
+        for (int curBlockTopLeftYCoor = (int) (windowDimensions.y() - BlockConfiguration.SIZE);
+             curBlockTopLeftYCoor >= topLeftCorner.y() ; curBlockTopLeftYCoor -= BlockConfiguration.SIZE){
             Block block = blockFactory.generateBlock(
                     new Vector2(topLeftCorner.x(), curBlockTopLeftYCoor));
             if (isCollisionBlock(curBlockTopLeftYCoor, topLeftCorner.y(), topLeftCorner.x())){
-                gameObjects.addGameObject(block, TerrainConfiguration.getTopBlockLayer());
+                gameObjects.addGameObject(block, TerrainConfiguration.TOP_BLOCKS_LAYER);
                 block.setTag(TerrainConfiguration.TOP_BLOCK_TAG);
             }
 
             else{
-                gameObjects.addGameObject(block, TerrainConfiguration.getDefaultBlocksLayer());
+                gameObjects.addGameObject(block, TerrainConfiguration.DEFAULT_BLOCKS_LAYER);
                 block.setTag(TerrainConfiguration.LOW_BLOCK_TAG);
             }
 
@@ -217,11 +223,11 @@ public class Terrain {
      * @return
      */
     private boolean isCollisionBlock(int y, float columnMinY, float x) {
-        boolean cond1 = y < columnMinY + TerrainConfiguration.TOP_BLOCK_FACTOR * Block.SIZE;
-        boolean cond2 = (groundHeightAt(x - Block.SIZE) > columnMinY) &&
-                (groundHeightAt(x - Block.SIZE) > y);
-        boolean cond3 = (groundHeightAt(x + Block.SIZE) > columnMinY) &&
-                (groundHeightAt(x + Block.SIZE) > y);
+        boolean cond1 = y < columnMinY + TerrainConfiguration.TOP_BLOCK_FACTOR * BlockConfiguration.SIZE;
+        boolean cond2 = (groundHeightAt(x - BlockConfiguration.SIZE) > columnMinY) &&
+                (groundHeightAt(x - BlockConfiguration.SIZE) > y);
+        boolean cond3 = (groundHeightAt(x + BlockConfiguration.SIZE) > columnMinY) &&
+                (groundHeightAt(x + BlockConfiguration.SIZE) > y);
         return (cond1 || cond2 || cond3);
     }
 }

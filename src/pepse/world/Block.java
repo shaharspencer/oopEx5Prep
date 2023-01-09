@@ -4,16 +4,14 @@ import danogl.GameObject;
 import danogl.components.GameObjectPhysics;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.util.configurations.BlockConfiguration;
 
 /**
- * s
  * Represents a single block (larger objects can be created from blocks).
  */
+//todo: update documentation so it fits our use of blocks
 public class Block extends GameObject {
-    // Size of a single block. Default size: 30.
-    public static int SIZE = 30;
-    // constant field for tag value to be set for class instances
-    private static final String GROUND_TAG = "ground";
+
 
     /**
      * Construct a new Block instance.
@@ -23,9 +21,9 @@ public class Block extends GameObject {
      * @param renderable     A renderable to render as the block.
      */
     public Block(Vector2 topLeftCorner, Renderable renderable) {
-        super(topLeftCorner, Vector2.ONES.mult(SIZE), renderable);
+        super(topLeftCorner, Vector2.ONES.mult(BlockConfiguration.SIZE), renderable);
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         physics().setMass(GameObjectPhysics.IMMOVABLE_MASS);
-        setTag(GROUND_TAG);
+        setTag(BlockConfiguration.GROUND_TAG);
     }
 }
