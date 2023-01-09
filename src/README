@@ -1,0 +1,49 @@
+shaharspencer, ellie.shami
+//TODO CHECK IF NEED ת.ז.
+
+הסבר על ההבדלים בין שני תרשימי ה-UML .
+//TODO WRITE THIS
+
+o הסבר על האופן שבו הפכתם את העולם שלכם לאינסופי .
+
+we made our world infinite using a class called InfiniteWorldManager. it has a method that update
+in PepseGameManager calls to update the world using the avatar location.
+we have a variable called buffer which defines the maximum amount the avatar is allowed to be
+outside of in order for us to want to update the infinite world.
+if we have exceeded this variable, by the avatar for example going right,
+we want to add BUFFER amount of trees and blocks to the right of the current world,
+and delete BUFFER amount of trees and blocks to the left of the current world.
+in each of the classes Tree and Terrain, we have a linked list that holds a sorted list of
+the blocks \ trees, from left to right. when we move right we add to the end of that list for
+an Xrange of around BUFFER, and we remove from the beggining of that list around BUFFER amount.
+each class, terrain and tree, is responsible when asked to delete from a specific x point to delete
+all objects relating to itself: terrain holds columns (lists) of blocks and for each column removes all
+blocks in that column, and the tree removes it's stump and it's leaves.
+this makes it so the game only holds a relatively stable length of world and the game can run quickly.
+
+
+o הסבר על הדרך שבה בחרתם לממש את החבילה trees ,ומדוע בחרתם דווקא בדרך זו.
+we created a class tree that calls another class, SingleTree, each time it wants to create one tree
+in a specific place. a SingleTree sprouts it's own leaves using a LeafFactory that chooses a color and
+size for the leaf and returns a leaf to the tree.
+
+since a leaf is a whole object of itself with it's own features and functionalities
+we chose to create a seperate class for leaves.
+
+//TODO - ELLI ADD MORE DOCUMENTATION FOR TREES
+
+
+
+o הסבר על דילמות או החלטות עיצוביות שקיבלתם במהלך העבודה.
+- we wanted to create a variety of different leaves color and size wise, since it's a whole object
+of itself with it's own features and functionalities we chose to create a seperate class for leaves.
+- we chose to create configuration files for classes, this is for readibility, for ease of reconfiguration
+throughout the many files of the project and for consistency.
+
+
+o אם בחרתם לממש בונוס, הסבירו מה היכולות שהוספתן וכיצד עשיתם זאת .
+- we added a visual energy counter that shows how much energy the avatar has
+- we added varying colors to the blocks, chosen randomly but remaining consistent as the world moves
+left and right
+- we added varying colors to the leaves, chosen randomly but remaining consistent as the world moves
+                                         left and right
