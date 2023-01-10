@@ -23,8 +23,8 @@ public class SingleTree extends GameObject {
     private final LeafFactory leafFactory;
     private final Vector2 treetopCenter;
     private final int treetopRadius;
-    private HashSet<Leaf> leaves = new HashSet<>();
-    private HashSet<GameObject> flowers = new HashSet<>();
+    private final HashSet<Leaf> leaves = new HashSet<>();
+    private final HashSet<GameObject> flowers = new HashSet<>();
 
     //######## public methods ########
 
@@ -46,8 +46,6 @@ public class SingleTree extends GameObject {
         physics().setMass(GameObjectPhysics.IMMOVABLE_MASS);
         setTag(TreeConfiguration.TREE_TAG);
         this.gameObjects = gameObjects;
-        this.leaves = new HashSet<>();
-        this.flowers = new HashSet<>();
         this.leafFactory = leafFactory;
         this.treetopCenter = treetopCenter;
         this.treetopRadius = treetopRadius;
@@ -62,10 +60,27 @@ public class SingleTree extends GameObject {
         for (Leaf leaf : leaves) {
             gameObjects.removeGameObject(leaf, TreeConfiguration.LEAF_LAYER);
         }
-        this.leaves = new HashSet<>();
+        this.leaves.clear();
 
         removeFlowers();
 
+    }
+
+    public void changeColor(int season) {
+        for (Leaf leaf : leaves) {
+            leaf.changeColor(season);
+        }
+    }
+
+    public void addFlowers() {
+        sproutLeaves(treetopCenter, treetopRadius, true);
+    }
+
+    public void removeFlowers() {
+        for (GameObject flower : flowers) {
+            gameObjects.removeGameObject(flower, TreeConfiguration.LEAF_LAYER);
+        }
+        this.flowers.clear();
     }
 
     //######## private methods ########
@@ -85,19 +100,18 @@ public class SingleTree extends GameObject {
             for (float angle = 0; angle <= 360 - TreeConfiguration.LEAF_SIZE;
                  angle += TreeConfiguration.LEAF_SIZE * TreeConfiguration.LEAF_ANGLE_CHANGE_FACTOR) {
                 Vector2 leafLocation =
-                        Vector2.of(currentRadiusSize,currentRadiusSize).rotated(angle).add(treetopCenter);
-                    if(isFlower){
-                        if (rand.nextInt(TreeConfiguration.LEAF_SPROUT_PROBABILITY_RANGE*10) <=
-                                TreeConfiguration.LEAF_SPROUT_PROBABILITY) {
-                        GameObject flower = new GameObject(leafLocation,TreeConfiguration.FLOWER_SIZE,
+                        Vector2.of(currentRadiusSize, currentRadiusSize).rotated(angle).add(treetopCenter);
+                if (isFlower) {
+                    if (rand.nextInt(TreeConfiguration.LEAF_SPROUT_PROBABILITY_RANGE * 10) <=
+                            TreeConfiguration.LEAF_SPROUT_PROBABILITY) {
+                        GameObject flower = new GameObject(leafLocation, TreeConfiguration.FLOWER_SIZE,
                                 flowerImage);
                         gameObjects.addGameObject(flower, TreeConfiguration.LEAF_LAYER);
                         this.flowers.add(flower);
-                        }
                     }
-                    else{
-                        if (rand.nextInt(TreeConfiguration.LEAF_SPROUT_PROBABILITY_RANGE) <=
-                                TreeConfiguration.LEAF_SPROUT_PROBABILITY) {
+                } else {
+                    if (rand.nextInt(TreeConfiguration.LEAF_SPROUT_PROBABILITY_RANGE) <=
+                            TreeConfiguration.LEAF_SPROUT_PROBABILITY) {
                         Leaf leaf = sproutALeaf(leafLocation);
                         this.leaves.add(leaf);
                     }
@@ -109,6 +123,7 @@ public class SingleTree extends GameObject {
 
     /**
      * Creates a single Leaf instance at leafLocation
+     *
      * @param leafLocation coordinates to create leaf at (top left corner of the desired leaf)
      * @return the created Leaf
      */
@@ -117,20 +132,4 @@ public class SingleTree extends GameObject {
         return leaf;
     }
 
-    public void changeColor(int season) {
-        for(Leaf leaf: leaves){
-            leaf.changeColor(season);
-        }
-    }
-
-    public void addFlowers() {
-        sproutLeaves(treetopCenter, treetopRadius, true);
-    }
-
-    public void removeFlowers() {
-        for(GameObject flower: flowers){
-            gameObjects.removeGameObject(flower, TreeConfiguration.LEAF_LAYER);
-        }
-        this.flowers = new HashSet<>();
-    }
 }

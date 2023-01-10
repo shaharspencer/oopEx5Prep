@@ -81,6 +81,30 @@ public class Leaf extends GameObject {
         this.setVelocity(Vector2.ZERO);
     }
 
+    /**
+     * Changes the leaf color according to season
+     * @param season
+     */
+    public void changeColor(int season ) {
+        Color newColor = summerColor;
+        switch (season){
+            case(0):
+                newColor = summerColor;
+                break;
+            case(1):
+                newColor = fallColor;
+                break;
+            case(2):
+                newColor = winterColor;
+                break;
+            case(3):
+                newColor = summerColor;
+                break;
+
+        }
+        this.setLeafColor(newColor);
+    }
+
     //######## private methods ########
 
     /**
@@ -181,24 +205,5 @@ public class Leaf extends GameObject {
     private void setLeafColor(Color color){
         RectangleRenderable re = new RectangleRenderable(color);
         this.renderer().setRenderable(re);
-    }
-    public void changeColor(int season ) {
-        Color newColor = summerColor;
-        switch (season){
-            case(0):
-                newColor = summerColor;
-                break;
-            case(1):
-                newColor = fallColor;
-                break;
-            case(2):
-                newColor = winterColor;
-                break;
-            case(3):
-                newColor = summerColor;
-                break;
-
-        }
-        this.setLeafColor(newColor);
     }
 }

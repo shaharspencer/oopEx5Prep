@@ -24,7 +24,7 @@ public class Tree {
     private LinkedList<SingleTree> existingTrees = new LinkedList<>();
     private final LeafFactory leafFactory;
 
-    private int season = 0;
+    private int season;
 
     //######## public Methods ########
 
@@ -46,7 +46,7 @@ public class Tree {
         this.flowerImage = imageReader.readImage(TreeConfiguration.FLOWER_IMAGE_PATH,
                 true);
 
-
+        this.season = 0;
         leafFactory = new LeafFactory(gameObjects, seed);
 
     }
@@ -68,6 +68,9 @@ public class Tree {
                     TreeConfiguration.TREE_SPROUT_PROBABILITY) {
                 SingleTree aTree = sproutATree(randX, startPositionX);
                 aTree.changeColor(season);
+                if(season == 3){
+                    aTree.addFlowers();
+                }
                 treesInRange.add(aTree);
             }
         }
@@ -82,6 +85,9 @@ public class Tree {
         // if we want to add to end of list
         else if (existingTrees.getLast().getTopLeftCorner().x() < minX) {
             existingTrees.addAll(existingTrees.size(), treesInRange);
+        }
+        else{
+            System.out.println("here");
         }
 
     }
@@ -102,7 +108,6 @@ public class Tree {
         // remove all objects to the left of the starting point from the game
         if (!removeToRight) {
             for (SingleTree tree : existingTrees) {
-
                 if (tree.getTopLeftCorner().x() <= startingSpot) {
                     removeObjectsInColumnFromGame(tree);
                 } else {
@@ -125,6 +130,35 @@ public class Tree {
         this.existingTrees = newList;
     }
 
+    /**
+     * Changes all the trees in the game according to the new season
+     * @param season new season to switch to
+     */
+    public void setSeason(int season) {
+        this.season = season;
+        setTreesColor(season);
+
+        switch (season) {
+            //summer
+            case (0):
+                removeFlowers();
+                break;
+            //"fall"
+            case (1):
+                //addClouds();
+                break;
+            //winter
+            case (2):
+                //setGroundColor(TreeConfiguration.LEAF_COLORS_WINTER);
+                break;
+            //spring
+            case (3):
+                //setGroundColor(TerrainConfiguration.blockColors);
+                sproutFlowers();
+                break;
+
+        }
+    }
 
     //######## private methods ########
 
@@ -181,32 +215,6 @@ public class Tree {
     private void removeObjectsInColumnFromGame(SingleTree tree) {
         tree.removeLeafs();
         gameObjects.removeGameObject(tree, TreeConfiguration.TREE_LAYER);
-    }
-
-    public void setSeason(int season) {
-        this.season = season;
-        setTreesColor(season);
-
-        switch (season) {
-            //summer
-            case (0):
-                removeFlowers();
-                break;
-            //"fall"
-            case (1):
-                //addClouds();
-                break;
-            //winter
-            case (2):
-                //setGroundColor(TreeConfiguration.LEAF_COLORS_WINTER);
-                break;
-            //spring
-            case (3):
-                //setGroundColor(TerrainConfiguration.blockColors);
-                sproutFlowers();
-                break;
-
-        }
     }
 
     /**
