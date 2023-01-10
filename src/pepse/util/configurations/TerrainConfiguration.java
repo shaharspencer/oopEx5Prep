@@ -13,13 +13,16 @@ public class TerrainConfiguration {
 
     // number of blocks we want the avatar the clash with
     public static final int TOP_BLOCK_FACTOR = 3;
+    public static final Color[] WINTER_COLORS = new Color[]{new Color(208, 208, 208),
+            Color.WHITE,
+            new Color(239, 245, 246),
+            new Color(239, 238, 231)};
+    ;
 
     // the tag for the topmost block
     public static String TOP_BLOCK_TAG = "top_block";
 
     public static String LOW_BLOCK_TAG = "lower_block";
-
-
 
 
     // creating collecetion of colors the block can have
@@ -33,14 +36,14 @@ public class TerrainConfiguration {
 
 
     // define layers for
-    public static int getTopBlockLayer(){
+    public static int getTopBlockLayer() {
         return TOP_BLOCKS_LAYER;
     }
 
     public static int DEFAULT_BLOCKS_LAYER = Layer.STATIC_OBJECTS;
     public static int TOP_BLOCKS_LAYER = DEFAULT_BLOCKS_LAYER - 1;
 
-    public static int getDefaultBlocksLayer(){
+    public static int getDefaultBlocksLayer() {
         return DEFAULT_BLOCKS_LAYER;
     }
 

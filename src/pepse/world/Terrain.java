@@ -3,7 +3,6 @@ package pepse.world;
 import danogl.collisions.GameObjectCollection;
 import danogl.util.Vector2;
 import pepse.util.configurations.AvatarConfiguration;
-import pepse.util.configurations.BlockConfiguration;
 import pepse.util.configurations.NoiseGenerator;
 import pepse.util.configurations.TerrainConfiguration;
 
@@ -234,5 +233,34 @@ public class Terrain {
         boolean cond3 = (groundHeightAt(x + Block.SIZE) > columnMinY) &&
                 (groundHeightAt(x + Block.SIZE) > y);
         return (cond1 || cond2 || cond3);
+    }
+
+    public void setSeason(int season) {
+        switch (season) {
+            //summer
+            case (0):
+                break;
+            //"fall"
+            case (1):
+                //addClouds();
+                break;
+            //winter
+            case (2):
+                setGroundColor(season);
+                break;
+            //spring
+            case (3):
+                setGroundColor(season);
+                break;
+        }
+
+    }
+
+    private void setGroundColor(int season) {
+        for (ArrayList<Block> column : blockColumns) {
+            for (Block block: column){
+                block.setBlockColor(season);
+            }
+        }
     }
 }

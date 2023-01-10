@@ -1,11 +1,16 @@
 package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
+import danogl.gui.ImageReader;
+import danogl.gui.rendering.ImageRenderable;
+import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.util.configurations.BlockConfiguration;
+import pepse.util.configurations.TerrainConfiguration;
 import pepse.util.configurations.TreeConfiguration;
 import pepse.world.Block;
 
+import java.awt.*;
 import java.util.*;
 import java.util.function.Function;
 
@@ -16,8 +21,10 @@ public class Tree {
 
     //######## private fields ########
     private final int seed;
+    private final ImageReader imageReader;
     private final GameObjectCollection gameObjects;
     private final Function<Float, Float> yCoordinateCallback;
+    private final ImageRenderable flowerImage;
     private LinkedList<SingleTree> existingTrees = new LinkedList<>();
     private final LeafFactory leafFactory;
 
@@ -32,11 +39,18 @@ public class Tree {
      * @param seed                used for setting the seed of the Random object of each tree (alongside
      *                            its x coordinate)
      */
-    public Tree(GameObjectCollection gameObjects, Function<Float, Float> yCoordinateCallback, int seed) {
+    public Tree(GameObjectCollection gameObjects, Function<Float, Float> yCoordinateCallback, int seed,
+                ImageReader imageReader) {
         this.gameObjects = gameObjects;
         this.yCoordinateCallback = yCoordinateCallback;
         this.seed = seed;
+        this.imageReader = imageReader;
+        this.flowerImage = imageReader.readImage(TreeConfiguration.FLOWER_IMAGE_PATH,
+                true);
+
+
         leafFactory = new LeafFactory(gameObjects, seed);
+
     }
 
 
@@ -156,7 +170,7 @@ public class Tree {
                 new Vector2(topLeftCorner.x() + stumpDimensions.x() * 0.5f - TreeConfiguration.LEAF_SIZE * 0.5f,
                         topLeftCorner.y());
         SingleTree tree = new SingleTree(topLeftCorner, stumpDimensions, gameObjects,
-                treetopCenter, treetopRadius, randomPerX, leafFactory);
+                treetopCenter, treetopRadius, randomPerX, leafFactory, flowerImage);
         return tree;
     }
 
@@ -168,6 +182,54 @@ public class Tree {
     private void removeObjectsInColumnFromGame(SingleTree tree) {
         tree.removeLeafs();
         gameObjects.removeGameObject(tree, TreeConfiguration.TREE_LAYER);
+    }
+
+    public void setSeason(int season) {
+        setTreesColor(season);
+
+        switch (season) {
+            //summer
+            case (0):
+                removeFlowers();
+                break;
+            //"fall"
+            case (1):
+                //addClouds();
+                break;
+            //winter
+            case (2):
+                //setGroundColor(TreeConfiguration.LEAF_COLORS_WINTER);
+                break;
+            //spring
+            case (3):
+                //setGroundColor(TerrainConfiguration.blockColors);
+                sproutFlowers();
+                break;
+
+        }
+    }
+
+    /**
+     * Changes the leaves colors to be according to season
+     *
+     * @param season
+     */
+    private void setTreesColor(int season) {
+        for (SingleTree tree : existingTrees) {
+            tree.changeColor(season);
+        }
+    }
+
+    private void sproutFlowers() {
+        for (SingleTree tree : existingTrees) {
+            tree.addFlowers();
+        }
+    }
+
+    private void removeFlowers() {
+        for (SingleTree tree : existingTrees) {
+            tree.removeFlowers();
+        }
     }
 
 }

@@ -34,6 +34,8 @@ public class PepseGameManager extends GameManager {
     private InfiniteWorldManager infiniteWorldManagerCreator;
     private Tree treesManager;
     private NumericLifeCounter energyCounter;
+    private SeasonManager seasonManager;
+    private SkyManager skyManager;
 
 
     //######## public methods ########
@@ -60,6 +62,13 @@ public class PepseGameManager extends GameManager {
         super.update(deltaTime);
         infiniteWorldManagerCreator.updateByAvatarLocation();
         this.energyCounter.setEnergyLevel(avatar.getEnergyLevel());
+
+        if(this.seasonManager.getDidSeasonChange()){
+            this.treesManager.setSeason(this.seasonManager.getSeason());
+            this.skyManager.setSeason(this.seasonManager.getSeason());
+            this.terrain.setSeason(this.seasonManager.getSeason());
+            this.seasonManager.turnOffDidSeasonChange();
+        }
 
     }
 
@@ -133,11 +142,18 @@ public class PepseGameManager extends GameManager {
         createSky();
         createNight();
         createSun();
-
+        createSeasons();
 
         createEnergyCounter();
 
         avatar.setTerrainCallback(terrain::groundHeightAt);
+    }
+
+    private void createSeasons() {
+        this.seasonManager = new SeasonManager();
+        seasonManager.create(gameObjects(), GameManagerConfiguration.SKY_LAYER,
+                GameManagerConfiguration.DAY_CYCLE_LENGTH*1f);
+        //TODO: MULTIPLY BY HOW MANY DAYS ARE A SEASON
     }
 
     /**
@@ -178,7 +194,8 @@ public class PepseGameManager extends GameManager {
         this.terrain = new Terrain(gameObjects(), GameManagerConfiguration.GROUND_LAYER, windowDimensions,
                 GameManagerConfiguration.SEED);
 
-        this.treesManager = new Tree(gameObjects(), terrain::groundHeightAt, GameManagerConfiguration.SEED);
+        this.treesManager = new Tree(gameObjects(), terrain::groundHeightAt, GameManagerConfiguration.SEED,
+                imageReader);
 
         this.infiniteWorldManagerCreator = new InfiniteWorldManager(terrain::createInRange,
                 terrain::deleteInRange,
@@ -191,7 +208,10 @@ public class PepseGameManager extends GameManager {
     }
 
     private void createSky() {
-        Sky.create(gameObjects(), windowDimensions, GameManagerConfiguration.SKY_LAYER);
+        skyManager = new SkyManager(gameObjects(), windowDimensions, GameManagerConfiguration.SKY_LAYER,
+                imageReader);
+        skyManager.createSky();
+        //Sky.create(gameObjects(), windowDimensions, GameManagerConfiguration.SKY_LAYER);
     }
 
     private void createNight() {
@@ -207,6 +227,7 @@ public class PepseGameManager extends GameManager {
     }
 
     public static void main(String[] args) {
-        new PepseGameManager(GameManagerConfiguration.WINDOW_TITLE, GameManagerConfiguration.WINDOW_SIZE).run();
+        new PepseGameManager(GameManagerConfiguration.WINDOW_TITLE,
+                GameManagerConfiguration.WINDOW_SIZE).run();
     }
 }

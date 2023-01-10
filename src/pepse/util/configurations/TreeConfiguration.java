@@ -1,8 +1,11 @@
 package pepse.util.configurations;
 
 import danogl.collisions.Layer;
+import danogl.gui.ImageReader;
+import danogl.gui.rendering.ImageRenderable;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Vector2;
 import pepse.world.Block;
 
 import java.awt.*;
@@ -20,7 +23,14 @@ public class TreeConfiguration {
     public static final Renderable STUMP_RENDERABLE = new RectangleRenderable(STUMP_COLOR);
     public static final String TREE_TAG = "tree_stump";
     public static final int LEAF_SIDE_OF_WIND_MOVEMENT = 1;
-
+    public static final Color[] LEAF_COLORS_FALL = new Color[]{new Color(208, 135, 26),
+            new Color(208, 199, 26),
+            new Color(208, 96, 26)};
+    public static final Color[] LEAF_COLORS_WINTER = new Color[]{new Color(228, 210, 231),
+            Color.WHITE,
+            new Color(195, 226, 234)};
+    public static final Vector2 FLOWER_SIZE = Vector2.of(15,15);
+    public static final String FLOWER_IMAGE_PATH = "./src/pepse/util/assets/flower.jpeg";
 
     /* leaf definitions */
     public static String LEAF_TAG = "leaf";
@@ -31,7 +41,7 @@ public class TreeConfiguration {
     public static final int LEAF_CHANGE_SIZE_IN_WIND_TRANSITION_TIME = 1;
 
     // the leaf layer - should not collide with anything
-    public static int LEAF_LAYER =  Layer.BACKGROUND + 201;
+    public static int LEAF_LAYER = Layer.BACKGROUND + 201;
 
     // the layer at which the tree is
     public static int TREE_LAYER = Layer.DEFAULT;
@@ -45,7 +55,6 @@ public class TreeConfiguration {
 
     public static final int LEAF_SPROUT_PROBABILITY_RANGE = 10;
     public static final int LEAF_SPROUT_PROBABILITY = 4;
-
 
 
     // possible leaf colors

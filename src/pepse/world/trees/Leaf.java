@@ -25,7 +25,10 @@ public class Leaf extends GameObject {
     private final GameObjectCollection gameObjects;
     private final Vector2 initialCenter;
     private final int leafDim;
+    private final Color fallColor;
+    private final Color winterColor;
     private Random rand;
+    private Color summerColor;
 
     private Transition<Float> horizontalTransition;
     private Transition<Float> wind_transition;
@@ -43,13 +46,18 @@ public class Leaf extends GameObject {
      * @param seed            game seed
      */
     public Leaf(Vector2 topLeftCorner, GameObjectCollection gameObjects,
-                RectangleRenderable leafRenderebale, int leafDim, int seed) {
+                RectangleRenderable leafRenderebale, int leafDim, int seed, Color summerColor) {
         super(topLeftCorner, new Vector2(leafDim, leafDim), leafRenderebale);
         this.leafDim = leafDim;
         this.rand = new Random(Objects.hash(this.getCenter(), seed));
+        this.summerColor = summerColor;
         this.initialCenter = this.getCenter();
         this.gameObjects = gameObjects;
+        this.fallColor =
+                TreeConfiguration.LEAF_COLORS_FALL[rand.nextInt(TreeConfiguration.LEAF_COLORS_FALL.length)];
 
+        this.winterColor =
+                TreeConfiguration.LEAF_COLORS_WINTER[rand.nextInt(TreeConfiguration.LEAF_COLORS_WINTER.length)];
         addToGameAndInitialize();
 
         moveLeaves();
@@ -169,5 +177,28 @@ public class Leaf extends GameObject {
                 TreeConfiguration.LEAF_CHANGE_SIZE_IN_WIND_TRANSITION_TIME,
                 TRANSITION_BACK_AND_FORTH,
                 null);
+    }
+    private void setLeafColor(Color color){
+        RectangleRenderable re = new RectangleRenderable(color);
+        this.renderer().setRenderable(re);
+    }
+    public void changeColor(int season ) {
+        Color newColor = summerColor;
+        switch (season){
+            case(0):
+                newColor = summerColor;
+                break;
+            case(1):
+                newColor = fallColor;
+                break;
+            case(2):
+                newColor = winterColor;
+                break;
+            case(3):
+                newColor = summerColor;
+                break;
+
+        }
+        this.setLeafColor(newColor);
     }
 }

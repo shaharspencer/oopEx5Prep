@@ -42,6 +42,6 @@ public class LeafFactory {
         int colorIndx = rand.nextInt(TreeConfiguration.LEAF_COLORS.length);
         Color leafColor = TreeConfiguration.LEAF_COLORS[colorIndx];
         return new Leaf(topLeftCorner, gameObjects, new RectangleRenderable(leafColor),
-                leafDimension, seed);
+                leafDimension, seed, leafColor);
     }
 }

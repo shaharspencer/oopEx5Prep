@@ -44,7 +44,10 @@ public class BlockFactory {
 
         int colorIndex = rand.nextInt(this.renderables.length);
         Renderable renderable = this.renderables[colorIndex];
-        return new Block(topLeftCorner, renderable);
+        Block newBlock = new Block(topLeftCorner, renderable);
+        newBlock.setColors(TerrainConfiguration.blockColors[colorIndex],
+                TerrainConfiguration.WINTER_COLORS[colorIndex]);
+        return newBlock;
     }
 
 

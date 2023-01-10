@@ -19,6 +19,6 @@ public class GameManagerConfiguration {
     public static int HALO_LAYER = SUN_LAYER + LAYERS_DIFF;
 
     // duration of a single day in the game in seconds
-    public static final int DAY_CYCLE_LENGTH = 30;
+    public static final int DAY_CYCLE_LENGTH = 10;
 
 }
