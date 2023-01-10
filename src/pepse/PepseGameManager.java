@@ -165,7 +165,8 @@ public class PepseGameManager extends GameManager {
                 Vector2.ONES.mult(10)
                 , new Vector2(30, 30),
                 avatar.getEnergyLevel());
-        gameObjects().addGameObject(energyCounter);
+        gameObjects().addGameObject(energyCounter, Layer.UI);
+        this.energyCounter.setEnergyLevel(AvatarConfiguration.initialAvatarEnergyLevel);
 
         this.energyCounter.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 

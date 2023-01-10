@@ -39,7 +39,7 @@ public class Avatar extends GameObject {
     private float energyLevel = 100;
     private NumericLifeCounter energyCounter;
 
-    enum Mode{FLYING, NOT_FLYING};
+    enum Mode{FLYING, REST, NOT_FLYING};
 
 
     public Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader) {
@@ -61,16 +61,9 @@ public class Avatar extends GameObject {
         this.standingAnimation = new AnimationRenderable(getAvatarConfigsStanding(),
                 imageReader, true, TIME_BETWEEN_CLIPS);
         setPhysics();
-        this.mode = Mode.NOT_FLYING;
-
-
+        this.mode = Mode.REST;
     }
 
-    private void addEnergyCounter() {
-        this.energyCounter = new NumericLifeCounter(
-                Vector2.ZERO, new Vector2(30, 30), this.energyLevel);
-        gameObjects.addGameObject(energyCounter);
-    }
 
     /**
      * returns a list of strings representing paths to avatar renderables for standing
@@ -207,14 +200,8 @@ public class Avatar extends GameObject {
         float minYPlace = terrainCallback.apply(this.getCenter().x())
                 -
                 (float) this.getDimensions().y() /2;
-        if (this.getTopLeftCorner().y() >= minYPlace) {
-            this.mode = Mode.NOT_FLYING;
-        }
 
-        else{
-            this.mode = Mode.FLYING;
-        }
-
+        this.mode = Mode.REST;
 
 
         // if we crashed into something lower than us, set y velocity to be 0
@@ -237,6 +224,18 @@ public class Avatar extends GameObject {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        if (this.mode.equals(Mode.REST)){
+            if (this.energyLevel < AvatarConfiguration.initialAvatarEnergyLevel){
+                this.energyLevel += ENERGY_FACTOR;
+            }
+        }
+
+        else if (this.mode.equals(Mode.FLYING)){
+            if (this.energyLevel > 0) {
+                this.energyLevel -= ENERGY_FACTOR;
+                transform().setAccelerationY(GRAVITY);
+            }
+        }
 
         respondToPressedKey();
         //todo: check if the section below with different numbers helps with sinking into the floor
@@ -259,30 +258,21 @@ public class Avatar extends GameObject {
 
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) &&
                 inputListener.isKeyPressed(KeyEvent.VK_DOWN)) {
+            this.mode = Mode.NOT_FLYING;
 
             upAnddownArePressed();
         }
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
             upKeyIsPressed();
+            this.mode = Mode.NOT_FLYING;
         }
         // TODO: WHEN AVATAR LANDS IT HAS NO ENERGY
         else if (this.getVelocity() == Vector2.ZERO) {
             noKeyIsPressedAndAvatarIsStanding();
-        }
-
-        if (this.mode.equals(Mode.NOT_FLYING)){
-            if (this.energyLevel < AvatarConfiguration.initialAvatarEnergyLevel){
-                this.energyLevel += ENERGY_FACTOR;
-            }
-        }
-
-        else{
-            this.energyLevel -= ENERGY_FACTOR;
+            this.mode = Mode.REST;
         }
 
         flyingControllor();
-
-
     }
 
     private void turnRightLeftOrStraight() {
@@ -319,8 +309,11 @@ public class Avatar extends GameObject {
      * this function sets all appropriate fields to not flying mode
      */
     private void setNotFlying(){
-        this.mode = Mode.NOT_FLYING;
         transform().setAccelerationY(GRAVITY);
+        if (this.mode.equals(Mode.REST)){
+            return;
+        }
+        this.mode = Mode.NOT_FLYING;
     }
 
     /**

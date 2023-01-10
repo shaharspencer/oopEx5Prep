@@ -105,3 +105,5 @@ left and right
 - we added varying colors to the leaves, chosen randomly but remaining consistent as the world moves
  left and right
 - we chose the leaf size at random (again, consistently)
+- we added season changes, every few numbers of days we changed the schema of the game to fit a specific
+season and it goes in a cycle of four.
