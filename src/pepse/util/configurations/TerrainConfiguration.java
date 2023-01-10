@@ -48,5 +48,4 @@ public class TerrainConfiguration {
         return DEFAULT_BLOCKS_LAYER;
     }
 
-    private Layer l = Layer.
 }
