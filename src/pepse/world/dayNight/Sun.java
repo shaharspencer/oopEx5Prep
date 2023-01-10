@@ -6,14 +6,12 @@ import danogl.components.CoordinateSpace;
 import danogl.components.Transition;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
-import pepse.util.configurations.DayNightConfiguration;
+import pepse.util.configurations.SkyAndDayNightConfiguration;
 
 import java.awt.*;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static danogl.components.Transition.TransitionType.TRANSITION_LOOP;
-import static danogl.components.Transition.TransitionType.TRANSITION_ONCE;
 
 /**
  * Represents the sun - moves across the sky in an elliptical path.
@@ -39,9 +37,9 @@ public class Sun {
 
         OvalRenderable sunRenderable = new OvalRenderable(Color.YELLOW);
         Vector2 windowCenter = new Vector2(windowDimensions.x() /2, windowDimensions.y() /2);
-        GameObject sun = new GameObject(Vector2.ZERO, DayNightConfiguration.SUN_DIMENSIONS, sunRenderable);
+        GameObject sun = new GameObject(Vector2.ZERO, SkyAndDayNightConfiguration.SUN_DIMENSIONS, sunRenderable);
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-        sun.setTag(DayNightConfiguration.SUN_TAG);
+        sun.setTag(SkyAndDayNightConfiguration.SUN_TAG);
         gameObjects.addGameObject(sun, layer);
         createSunTransition(sun, cycleLength, windowCenter);
         return sun;

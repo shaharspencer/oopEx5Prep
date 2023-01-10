@@ -6,6 +6,7 @@ import pepse.world.Block;
 import java.awt.*;
 
 public class TerrainConfiguration {
+    public static final int GROUND_LAYER = Layer.STATIC_OBJECTS;
     public static final double X_NOISE_FACTOR = 0.01;
     public static final int BASIC_HEIGHT = Block.SIZE * 12;
 
@@ -47,4 +48,5 @@ public class TerrainConfiguration {
         return DEFAULT_BLOCKS_LAYER;
     }
 
+    private Layer l = Layer.
 }

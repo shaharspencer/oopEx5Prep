@@ -5,7 +5,7 @@ import danogl.collisions.GameObjectCollection;
 import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
-import pepse.util.configurations.SkyConfiguration;
+import pepse.util.configurations.SkyAndDayNightConfiguration;
 
 /**
  * Represents the sky.
@@ -24,10 +24,10 @@ public class Sky {
                                            Vector2 windowDimensions, int skyLayer){
         GameObject sky = new GameObject(
                 Vector2.ZERO, windowDimensions,
-                new RectangleRenderable(SkyConfiguration.BASIC_SKY_COLOR));
+                new RectangleRenderable(SkyAndDayNightConfiguration.BASIC_SKY_COLOR));
         sky.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(sky, skyLayer);
-        sky.setTag(SkyConfiguration.SKY_TAG);
+        sky.setTag(SkyAndDayNightConfiguration.SKY_TAG);
         return sky;
     }
 

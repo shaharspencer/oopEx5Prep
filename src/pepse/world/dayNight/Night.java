@@ -7,7 +7,7 @@ import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.util.configurations.DayNightConfiguration;
+import pepse.util.configurations.SkyAndDayNightConfiguration;
 
 import java.awt.*;
 
@@ -40,11 +40,11 @@ public class Night {
         GameObject nightObject = new GameObject(Vector2.ZERO, windowDimensions, nightRectangle);
         nightObject.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects.addGameObject(nightObject, layer);
-        nightObject.setTag(DayNightConfiguration.NIGHT_TAG);
+        nightObject.setTag(SkyAndDayNightConfiguration.NIGHT_TAG);
 
         new Transition<Float>(nightObject,
-                nightObject.renderer()::setOpaqueness, DayNightConfiguration.NOON_OPACITY,
-                DayNightConfiguration.MIDNIGHT_OPACITY,
+                nightObject.renderer()::setOpaqueness, SkyAndDayNightConfiguration.NOON_OPACITY,
+                SkyAndDayNightConfiguration.MIDNIGHT_OPACITY,
                 Transition.CUBIC_INTERPOLATOR_FLOAT, cycleLength/2.0f,
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
 

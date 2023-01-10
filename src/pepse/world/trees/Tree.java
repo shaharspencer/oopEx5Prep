@@ -3,14 +3,10 @@ package pepse.world.trees;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
 import danogl.gui.rendering.ImageRenderable;
-import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.util.configurations.BlockConfiguration;
-import pepse.util.configurations.TerrainConfiguration;
 import pepse.util.configurations.TreeConfiguration;
 import pepse.world.Block;
 
-import java.awt.*;
 import java.util.*;
 import java.util.function.Function;
 

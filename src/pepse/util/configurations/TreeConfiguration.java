@@ -40,11 +40,8 @@ public class TreeConfiguration {
     public static final float LEAF_CHANGE_SIZE_FINALE_SIZE_FACTOR = 1.05f;
     public static final int LEAF_CHANGE_SIZE_IN_WIND_TRANSITION_TIME = 1;
 
-    // the leaf layer - should not collide with anything
-    public static int LEAF_LAYER = Layer.BACKGROUND + 201;
-
-    // the layer at which the tree is
     public static int TREE_LAYER = Layer.DEFAULT;
+    public static int LEAF_LAYER = TREE_LAYER +1;
 
     // the possible leaf dimensions
     public static final int[] LEAF_DIM = new int[]{13, 15, 17};

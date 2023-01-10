@@ -5,11 +5,9 @@ import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
-import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
-import danogl.util.Counter;
 import danogl.util.Vector2;
 import pepse.util.configurations.*;
 import pepse.world.*;
@@ -151,7 +149,7 @@ public class PepseGameManager extends GameManager {
 
     private void createSeasons() {
         this.seasonManager = new SeasonManager();
-        seasonManager.create(gameObjects(), GameManagerConfiguration.SKY_LAYER,
+        seasonManager.create(gameObjects(), SkyAndDayNightConfiguration.SKY_LAYER,
                 GameManagerConfiguration.DAY_CYCLE_LENGTH*1f);
         //TODO: MULTIPLY BY HOW MANY DAYS ARE A SEASON
     }
@@ -191,7 +189,7 @@ public class PepseGameManager extends GameManager {
      * initializes an infinite world object and the world according to avatars location
      */
     private void createInfiniteWorld() {
-        this.terrain = new Terrain(gameObjects(), GameManagerConfiguration.GROUND_LAYER, windowDimensions,
+        this.terrain = new Terrain(gameObjects(), TerrainConfiguration.GROUND_LAYER, windowDimensions,
                 GameManagerConfiguration.SEED);
 
         this.treesManager = new Tree(gameObjects(), terrain::groundHeightAt, GameManagerConfiguration.SEED,
@@ -208,7 +206,7 @@ public class PepseGameManager extends GameManager {
     }
 
     private void createSky() {
-        skyManager = new SkyManager(gameObjects(), windowDimensions, GameManagerConfiguration.SKY_LAYER,
+        skyManager = new SkyManager(gameObjects(), windowDimensions, SkyAndDayNightConfiguration.SKY_LAYER,
                 imageReader);
         skyManager.createSky();
         //Sky.create(gameObjects(), windowDimensions, GameManagerConfiguration.SKY_LAYER);
@@ -220,10 +218,10 @@ public class PepseGameManager extends GameManager {
     }
 
     private void createSun() {
-        this.sun = Sun.create(gameObjects(), GameManagerConfiguration.SUN_LAYER, windowDimensions,
+        this.sun = Sun.create(gameObjects(), SkyAndDayNightConfiguration.SUN_LAYER, windowDimensions,
                 GameManagerConfiguration.DAY_CYCLE_LENGTH);
-        SunHalo.create(gameObjects(), GameManagerConfiguration.HALO_LAYER, sun,
-                GameManagerConfiguration.HALO_COLOR);
+        SunHalo.create(gameObjects(), SkyAndDayNightConfiguration.HALO_LAYER, sun,
+                SkyAndDayNightConfiguration.HALO_COLOR);
     }
 
     public static void main(String[] args) {

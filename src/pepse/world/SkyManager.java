@@ -8,7 +8,7 @@ import danogl.gui.ImageReader;
 import danogl.gui.rendering.ImageRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.util.configurations.DayNightConfiguration;
+import pepse.util.configurations.SkyAndDayNightConfiguration;
 import pepse.util.configurations.GameManagerConfiguration;
 import pepse.util.configurations.TreeConfiguration;
 
@@ -36,7 +36,7 @@ public class SkyManager {
         this.windowDimensions = windowDimensions;
         this.skyLayer = skyLayer;
         //TODO: MOVE TO ANOTHER CONFIGURATION FILE
-        this.cloudImage = imageReader.readImage(DayNightConfiguration.CLOUD_IMAGE,
+        this.cloudImage = imageReader.readImage(SkyAndDayNightConfiguration.CLOUD_IMAGE,
                 true);
     }
     public void setSeason(int season) {
@@ -79,7 +79,7 @@ public class SkyManager {
     }
 
     private GameObject createSnowflake(Vector2 startLocation){
-        GameObject snowflake = new GameObject(startLocation, DayNightConfiguration.SNOW_SIZE, snowflakeImage);
+        GameObject snowflake = new GameObject(startLocation, SkyAndDayNightConfiguration.SNOW_SIZE, snowflakeImage);
         //todo: change to be of snow and not leaf
         snowflake.setVelocity(Vector2.DOWN);
         new Transition<Vector2>(snowflake,
@@ -116,6 +116,6 @@ public class SkyManager {
     }
 
     public void createSky() {
-        currentSky = Sky.create(gameObjects, windowDimensions, GameManagerConfiguration.SKY_LAYER);
+        currentSky = Sky.create(gameObjects, windowDimensions, SkyAndDayNightConfiguration.SKY_LAYER);
     }
 }

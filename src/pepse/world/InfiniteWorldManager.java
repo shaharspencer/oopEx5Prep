@@ -1,7 +1,6 @@
 package pepse.world;
 
 import danogl.util.Vector2;
-import pepse.util.configurations.BlockConfiguration;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

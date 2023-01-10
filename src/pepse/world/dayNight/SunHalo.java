@@ -5,8 +5,7 @@ import danogl.collisions.GameObjectCollection;
 import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.Renderable;
-import danogl.util.Vector2;
-import pepse.util.configurations.DayNightConfiguration;
+import pepse.util.configurations.SkyAndDayNightConfiguration;
 
 import java.awt.*;
 
@@ -29,13 +28,13 @@ public class SunHalo {
                                     GameObject sun, Color color) {
         Renderable haloRenderable = new OvalRenderable(color);
         GameObject halo = new GameObject(sun.getCenter(),
-                sun.getDimensions().mult(DayNightConfiguration.HALO_SIZE_FACTOR),
+                sun.getDimensions().mult(SkyAndDayNightConfiguration.HALO_SIZE_FACTOR),
                 haloRenderable);
         halo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         halo.addComponent(x -> halo.setCenter(sun.getCenter()));
 
         gameObjects.addGameObject(halo, layer);
-        halo.setTag(DayNightConfiguration.HALO_TAG);
+        halo.setTag(SkyAndDayNightConfiguration.HALO_TAG);
         return halo;
     }
 }
