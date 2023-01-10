@@ -20,7 +20,7 @@ public class NumericLifeCounter extends GameObject {
         this.energyLevel = energyLevel;
         this.textRenderable = new TextRenderable(Float.toString(energyLevel));
         renderer().setRenderable(textRenderable);
-        textRenderable.setColor(Color.DARK_GRAY);
+        textRenderable.setColor(Color.RED);
 
     }
 
