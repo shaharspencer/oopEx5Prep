@@ -14,7 +14,7 @@ import java.awt.*;
  */
 public class Block extends GameObject {
     //######## public fields ########
-    public static int SIZE = 30;
+    public static final int SIZE = 30;
     //######## private fields ########
     private Color regularColor;
     private Color winterColor;

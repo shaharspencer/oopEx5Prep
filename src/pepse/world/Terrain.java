@@ -15,6 +15,8 @@ import java.util.*;
 public class Terrain {
     //######## private fields ########
     private final Vector2 vectorZero;
+
+    private int season =0;
     /*
     this is only here in order to pass the presubmit check, we are using the color defined in the
      configuration file
@@ -199,9 +201,11 @@ public class Terrain {
         ArrayList<Block> columnList = new ArrayList<>();
         for (int curBlockTopLeftYCoor = (int) (windowDimensions.y() - Block.SIZE);
              curBlockTopLeftYCoor >= topLeftCorner.y(); curBlockTopLeftYCoor -= Block.SIZE) {
+
             Block block = blockFactory.generateBlock(Vector2.of(topLeftCorner.x(), curBlockTopLeftYCoor),
                     randX);
             block.setTag(TerrainConfiguration.GROUND_TAG);
+            block.setBlockColor(season);
 
             if (isCollisionBlock(curBlockTopLeftYCoor, topLeftCorner.y(), topLeftCorner.x())) {
                 gameObjects.addGameObject(block, TerrainConfiguration.TOP_BLOCKS_LAYER);
@@ -236,6 +240,7 @@ public class Terrain {
     }
 
     public void setSeason(int season) {
+        this.season = season;
         switch (season) {
             //summer
             case (0):

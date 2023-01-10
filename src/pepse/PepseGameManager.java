@@ -11,9 +11,9 @@ import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
 import pepse.util.configurations.*;
 import pepse.world.*;
-import pepse.world.dayNight.Night;
-import pepse.world.dayNight.Sun;
-import pepse.world.dayNight.SunHalo;
+import pepse.world.daynight.Night;
+import pepse.world.daynight.Sun;
+import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 /**
@@ -150,8 +150,7 @@ public class PepseGameManager extends GameManager {
     private void createSeasons() {
         this.seasonManager = new SeasonManager();
         seasonManager.create(gameObjects(), SkyAndDayNightConfiguration.SKY_LAYER,
-                GameManagerConfiguration.DAY_CYCLE_LENGTH*1f);
-        //TODO: MULTIPLY BY HOW MANY DAYS ARE A SEASON
+                GameManagerConfiguration.DAY_CYCLE_LENGTH*GameManagerConfiguration.DAYS_IN_SEASON);
     }
 
     /**

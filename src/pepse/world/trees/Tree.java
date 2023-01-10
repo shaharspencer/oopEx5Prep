@@ -24,6 +24,8 @@ public class Tree {
     private LinkedList<SingleTree> existingTrees = new LinkedList<>();
     private final LeafFactory leafFactory;
 
+    private int season = 0;
+
     //######## public Methods ########
 
     /**
@@ -65,6 +67,7 @@ public class Tree {
             if (randX.nextInt(TreeConfiguration.TREE_SPROUT_PROBABILITY_RANGE) <
                     TreeConfiguration.TREE_SPROUT_PROBABILITY) {
                 SingleTree aTree = sproutATree(randX, startPositionX);
+                aTree.changeColor(season);
                 treesInRange.add(aTree);
             }
         }
@@ -181,6 +184,7 @@ public class Tree {
     }
 
     public void setSeason(int season) {
+        this.season = season;
         setTreesColor(season);
 
         switch (season) {

@@ -22,7 +22,7 @@ public class Avatar extends GameObject {
     private static final float ENERGY_FACTOR = 0.5F;
     private static GameObjectCollection gameObjects;
     private final AnimationRenderable standingAnimation;
-    private static final String AVATAR_IMAGE_FOLDER_PATH = "./src/pepse/util/assets/retro_man/";
+    private static final String AVATAR_IMAGE_FOLDER_PATH = "./src/assets/retro_man/";
     private static final float VELOCITY_X = 250;
     private static final float VELOCITY_Y = -400;
     private static final float GRAVITY = 500;
