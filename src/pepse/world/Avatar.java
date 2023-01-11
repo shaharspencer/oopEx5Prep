@@ -14,11 +14,12 @@ import pepse.util.configurations.TerrainConfiguration;
 import java.awt.event.KeyEvent;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.function.Function;
 
 public class Avatar extends GameObject {
     //######## private fields ########
-    private static final double TIME_BETWEEN_CLIPS = 1;
+    private static final double TIME_BETWEEN_CLIPS = 0.5;
     private static final float ENERGY_FACTOR = 0.5F;
     private static GameObjectCollection gameObjects;
     private final AnimationRenderable standingAnimation;
@@ -27,9 +28,11 @@ public class Avatar extends GameObject {
     private final AnimationRenderable leftAnimation;
     private Mode mode;
     private UserInputListener inputListener;
-    private Function<Float, Float> terrainCallback;
+    //private Function<Float, Float> terrainCallback;
     private float energyLevel = 100;
     private NumericLifeCounter energyCounter;
+    private enum movementDirections {STRAIGHT, LEFT, RIGHT}
+    private movementDirections directionOfMovement = movementDirections.STRAIGHT;
 
     private enum Mode {FLYING, REST, NOT_FLYING};
 
@@ -46,15 +49,16 @@ public class Avatar extends GameObject {
         super(pos, Vector2.ONES.mult(50f), new AnimationRenderable(getAvatarConfigsStanding(),
                 imageReader, true, TIME_BETWEEN_CLIPS));
 
-
+        this.setTag(AvatarConfiguration.AVATAR_TAG);
         this.inputListener = inputListener;
+        this.leftAnimation = new AnimationRenderable(getAvatarConfigsLeft(),
+                imageReader, true, TIME_BETWEEN_CLIPS);
+
         this.rightAnimation = new AnimationRenderable(
                 getAvatarConfigsRight(),
                 imageReader, true, TIME_BETWEEN_CLIPS);
-        this.upAnimation = new AnimationRenderable(getAvatarConfigsUp(),
-                imageReader, true, TIME_BETWEEN_CLIPS);
 
-        this.leftAnimation = new AnimationRenderable(getAvatarConfigsLeft(),
+        this.upAnimation = new AnimationRenderable(getAvatarConfigsUp(),
                 imageReader, true, TIME_BETWEEN_CLIPS);
 
         this.standingAnimation = new AnimationRenderable(getAvatarConfigsStanding(),
@@ -69,8 +73,6 @@ public class Avatar extends GameObject {
      *
      * @param other     The GameObject with which a collision occurred.
      * @param collision Information regarding this collision.
-     *                  A reasonable elastic behavior can be achieved with:
-     *                  setVelocity(getVelocity().flipped(collision.getNormal()));
      */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
@@ -121,17 +123,19 @@ public class Avatar extends GameObject {
         } else if (this.mode.equals(Mode.FLYING)) {
             if (this.energyLevel > 0) {
                 this.energyLevel -= ENERGY_FACTOR;
-                transform().setAccelerationY(AvatarConfiguration.GRAVITY);
+                //transform().setAccelerationY(AvatarConfiguration.GRAVITY);
             }
         }
 
         respondToPressedKey();
     }
 
+/*
 
     public void setTerrainCallback(Function<Float, Float> yCoordinateCallback) {
-        this.terrainCallback = yCoordinateCallback;
+        //this.terrainCallback = yCoordinateCallback;
     }
+*/
 
 
     public float getEnergyLevel() {
@@ -200,7 +204,8 @@ public class Avatar extends GameObject {
 
         File[] directoryListing = dir.listFiles();
 
-        assert directoryListing != null;
+        Arrays.sort(directoryListing);
+
         String[] DirImages = new String[directoryListing.length];
         int i = 0;
         for (File child : directoryListing) {
@@ -271,33 +276,76 @@ public class Avatar extends GameObject {
      * responds to pressed key using an appropriate function
      */
     private void respondToPressedKey() {
+
+
         turnRightLeftOrStraight();
-
-        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) &&
-                inputListener.isKeyPressed(KeyEvent.VK_DOWN)) {
-            this.mode = Mode.NOT_FLYING;
-
-            upAnddownArePressed();
-        }
+        //if jump
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
-            upKeyIsPressed();
+            transform().setVelocityY(AvatarConfiguration.VELOCITY_Y);
+            this.renderer().setRenderable(upAnimation);
             this.mode = Mode.NOT_FLYING;
-        } else if (this.getVelocity() == Vector2.ZERO) {
-            noKeyIsPressedAndAvatarIsStanding();
+
+        }
+        //fly
+        else if (inputListener.isKeyPressed(KeyEvent.VK_SHIFT) &&
+                inputListener.isKeyPressed(KeyEvent.VK_SPACE)) {
+             if (this.energyLevel > 0) {
+                 this.transform().setVelocityY(AvatarConfiguration.VELOCITY_Y);
+                 if (this.mode != Mode.FLYING) {
+                     this.mode = Mode.FLYING;
+                     this.renderer().setRenderable(this.standingAnimation);
+                 }
+             }
+             else{
+                 if (this.mode.equals(Mode.REST)) {
+                     return;
+                 }
+                 this.mode = Mode.NOT_FLYING;
+             }
+        }
+
+        else if (this.getVelocity() == Vector2.ZERO) {
+            //noKeyIsPressedAndAvatarIsStanding();
             this.mode = Mode.REST;
         }
 
-        flyingControllor();
+        else{
+            if (this.mode.equals(Mode.REST)) {
+                return;
+            }
+            this.mode = Mode.NOT_FLYING;
+        }
+
+        //flyingControllor();
     }
 
     private void turnRightLeftOrStraight() {
+        int xVel = 0;
+
         if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
-            leftKeyIsPressed();
-        } else if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
-            rightkeyIsPressed();
-        } else {
-            this.renderer().setRenderable(this.upAnimation);
+            xVel -= AvatarConfiguration.VELOCITY_X;
+            //leftKeyIsPressed();
         }
+        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
+            xVel += AvatarConfiguration.VELOCITY_X;
+            ///rightkeyIsPressed();
+        }
+
+        if (xVel <0 && this.directionOfMovement != movementDirections.LEFT){
+            this.directionOfMovement = movementDirections.LEFT;
+            this.renderer().setRenderable(this.leftAnimation);
+        }
+        else if (xVel >0 && this.directionOfMovement != movementDirections.RIGHT){
+            this.directionOfMovement = movementDirections.RIGHT;
+            this.renderer().setRenderable(this.rightAnimation);
+        }
+
+        else if(xVel == 0 && this.directionOfMovement != movementDirections.STRAIGHT) {
+            this.directionOfMovement = movementDirections.STRAIGHT;
+            this.renderer().setRenderable(this.standingAnimation);
+        }
+
+        transform().setVelocityX(xVel);
     }
 
     /**
@@ -319,7 +367,7 @@ public class Avatar extends GameObject {
      * this function sets all appropriate fields to not flying mode
      */
     private void setNotFlying() {
-        transform().setAccelerationY(AvatarConfiguration.GRAVITY);
+        //transform().setAccelerationY(AvatarConfiguration.GRAVITY);
         if (this.mode.equals(Mode.REST)) {
             return;
         }
@@ -334,9 +382,10 @@ public class Avatar extends GameObject {
         if (this.energyLevel <= 0) {
             setNotFlying();
         } else {
-            transform().setAccelerationY(0);
+            //transform().setAccelerationY(0);
+            this.transform().setVelocityY(AvatarConfiguration.VELOCITY_Y);
             this.mode = Mode.FLYING;
-            this.renderer().setRenderable(this.upAnimation);
+            this.renderer().setRenderable(this.standingAnimation);
         }
     }
 
@@ -353,10 +402,8 @@ public class Avatar extends GameObject {
 
     private void upKeyIsPressed() {
         transform().setVelocityY(AvatarConfiguration.VELOCITY_Y);
-        transform().setVelocityX(0);
-        this.physics().preventIntersectionsFromDirection(Vector2.ZERO);
         this.renderer().setRenderable(upAnimation);
-        this.setDimensions((Vector2.ONES.mult(50f)));
+        //this.setDimensions((Vector2.ONES.mult(50f)));
     }
 
     /**

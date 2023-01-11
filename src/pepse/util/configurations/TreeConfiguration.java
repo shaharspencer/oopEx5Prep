@@ -46,12 +46,12 @@ public class TreeConfiguration {
     // the possible leaf dimensions
     public static final int[] LEAF_DIM = new int[]{13, 15, 17};
     // the leafs will overlap obe another by this factor
-    public static final double LEAF_OVERLAP_FACTOR = 0.25;
+    public static final double LEAF_OVERLAP_FACTOR = 0.3;
     // factor to be multiplied by leaf size when increasing the angle when leafs are placed
-    public static final double LEAF_ANGLE_CHANGE_FACTOR = 0.3;
+    public static final double LEAF_ANGLE_CHANGE_FACTOR = 0.5;
 
-    public static final int LEAF_SPROUT_PROBABILITY_RANGE = 10;
-    public static final int LEAF_SPROUT_PROBABILITY = 4;
+    public static final int LEAF_SPROUT_PROBABILITY_RANGE = 12;
+    public static final int LEAF_SPROUT_PROBABILITY = 3;
 
 
     // possible leaf colors

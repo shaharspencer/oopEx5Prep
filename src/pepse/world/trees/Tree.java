@@ -80,16 +80,12 @@ public class Tree {
         }
         // if we want to add at beginning of list
         else if (existingTrees.get(0).getTopLeftCorner().x() > maxX) {
-            existingTrees.addAll(0, existingTrees);
+            existingTrees.addAll(0, treesInRange);
         }
         // if we want to add to end of list
         else if (existingTrees.getLast().getTopLeftCorner().x() < minX) {
             existingTrees.addAll(existingTrees.size(), treesInRange);
         }
-        else{
-            System.out.println("here");
-        }
-
     }
 
     /**
@@ -127,7 +123,8 @@ public class Tree {
                 }
             }
         }
-        this.existingTrees = newList;
+        this.existingTrees.clear();
+        this.existingTrees.addAll(newList);
     }
 
     /**
