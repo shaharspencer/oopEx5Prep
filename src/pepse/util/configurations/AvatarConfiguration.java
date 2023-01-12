@@ -19,4 +19,9 @@ public class AvatarConfiguration {
     public static final String AVATAR_IMAGE_RIGHT_FOLDER = "right";
     public static final String AVATAR_IMAGE_UP_FOLDER = "up";
     public static final String AVATAR_IMAGE_LEFT_FOLDER = "left";
+    public static final double TIME_BETWEEN_CLIPS = 0.5;
+    public static final float ENERGY_FACTOR = 0.5F;
+    public enum movementDirections {STRAIGHT, LEFT, RIGHT}
+    public enum Mode {FLYING, REST, NOT_FLYING};
+
 }
