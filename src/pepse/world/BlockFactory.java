@@ -21,9 +21,9 @@ public class BlockFactory {
     /**
      * Constructor of a BlockFactory instance.
      */
-    public BlockFactory(){
+    public BlockFactory() {
         int i = 0;
-        for (Color color: TerrainConfiguration.blockColors){
+        for (Color color : TerrainConfiguration.blockColors) {
             renderables[i] = new RectangleRenderable(
                     ColorSupplier.approximateColor(color));
             i++;
@@ -34,10 +34,11 @@ public class BlockFactory {
     /**
      * This is the method that creates a block, using a random integer to choose a renderable
      * and returns a block.
+     *
      * @param topLeftCorner The location of the top-left corner of the created block, in window coordinates
      *                      (pixels).
-     * @param rand random object to use for this block (according to the game seed and x coordinate of the
-     *             block)
+     * @param rand          random object to use for this block (according to the game seed and x coordinate of the
+     *                      block)
      * @return a Block instance located at topLeftCorner.
      */
     public Block generateBlock(Vector2 topLeftCorner, Random rand) {

@@ -1,8 +1,18 @@
 shaharspencer
 ellie.shami
 
-1.UMLs:
-//TODO WRITE THIS
+
+1. UMLs:
+1.1. while writing the project we realized it would be sensible to create a configurations
+     package that holds the necessary information and variables for the different objects in the game.
+     (We didn't plan on doing so ahead of time)
+1.2. we added an assets package to hold the avatar's images.
+1.3. we added relevant factories for leaves and blocks.
+1.4  we added a separate class to manage the infinite world (encapsulation principle).
+1.5. we added a season manager to manage the seasons (encapsulation principle).
+1.6. we added methods we saw as necessary to the different classes in order to control the flow of the classes
+    within themselves and in order to help classes interact in an abstract way.
+
 
 2. Infinite World:
 2.1 we made our world infinite using a class called InfiniteWorldManager. it has a method that update
@@ -41,12 +51,13 @@ ellie.shami
     For trees this works with the same general principle, but is a bit more complicated - elaboration can be
     seen under "Trees" (starting from 3.4).
 
+
 3. Trees:
 3.1 We considered the Tree class that is defined in the instructions as a "trees manager", a class that is
     responsible for managing all of the trees and leaves in the game. There is only one instance of it in the
     game, and from here on we'll refer to it as "the tree manager"
-    In order to maintain a mentality of having objects that represent actual objects in the game we decided to
-     create a class called "SingleTree" that each of its instances represents a tree object in
+    In order to maintain a mentality of having objects that represent actual objects in the game we decided
+    to create a class called "SingleTree" that each of its instances represents a tree object in
     the game. Each tree has a stump (gameObject) and a set of leaves that construct its treetop.
 3.2 We decided not to implement the stump or the leaves as Block instances (or as classes that extend Block)
     because of that mentality, a stump is a single object and not a collection of blocks, and a Leaf is a
@@ -83,6 +94,7 @@ ellie.shami
 3.7 When the tree manager needs to remove a tree from the game, the tree is responsible for deleting itself
     (stump and leaves).
 
+
 4. Design choices and dilemmas:
 4.1 we wanted to create a variety of different leaves color and size wise, since it's a whole object of itself
     with it's own features and functionalities we chose to create a separate class for leaves (as described
@@ -95,13 +107,20 @@ ellie.shami
     and more realistic. We also tried different ways to set the treetop size before choosing a fixed ratio of
     a third from the stump height.
 4.5 deciding that the stump isn't a Block\set of blocks (as described above at section 3.2)
+4.6 working together on the code we used the principle of polymorphism a lot, as we discussed the API of each
+    component first and doing so while following the principles of polymorphism, hiding and encapsulation we
+    were able to sometimes write different parts of the code simultaneously.
+
 
 5. Bonuses: (explain what bonuses you did and how you implemented them)
-- we added a visual energy counter that shows how much energy the avatar has
-- we added varying colors to the blocks, chosen randomly but remaining consistent as the world moves
-left and right
-- we added varying colors to the leaves, chosen randomly but remaining consistent as the world moves
- left and right
-- we chose the leaf size at random (again, consistently)
-- we added season changes, every few numbers of days we changed the schema of the game to fit a specific
-season and it goes in a cycle of four.
+5.1 we added a visual energy counter that shows how much energy the avatar has
+5.2 we added varying colors to the blocks, chosen randomly from a set of possible colors but remaining
+    consistent as the world moves left and right.
+5.3 we added varying colors to the leaves, chosen randomly from a set of possible colors but remaining
+    consistent as the world moves left and right.
+5.4 we chose the leaf size at random (again, consistently) from a set of possible sizes
+5.5 we added season to the game: each season has a matching visualization in the game:
+    Summer is the regular game visualization as described so far, in the fall there are clouds in the sky and
+    the leaves change colors to a verity of yellows and oranges, during the winter the ground and the trees
+    are covered with snow so their colors represent that, and in the spring the sky is clear and the trees are
+    blooming.

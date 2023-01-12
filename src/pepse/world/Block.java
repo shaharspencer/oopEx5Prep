@@ -24,9 +24,9 @@ public class Block extends GameObject {
     /**
      * Construct a new Block instance.
      *
-     * @param topLeftCorner  The location of the top-left corner of the created block, in window coordinates
-     *                       (pixels).
-     * @param renderable     A renderable to render as the block.
+     * @param topLeftCorner The location of the top-left corner of the created block, in window coordinates
+     *                      (pixels).
+     * @param renderable    A renderable to render as the block.
      */
     public Block(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, Vector2.ONES.mult(SIZE), renderable);
@@ -34,15 +34,15 @@ public class Block extends GameObject {
         physics().setMass(GameObjectPhysics.IMMOVABLE_MASS);
     }
 
-    public void setColors(Color regularColor, Color winterColor){
+    public void setColors(Color regularColor, Color winterColor) {
         this.regularColor = regularColor;
         this.winterColor = winterColor;
     }
 
-    public void setBlockColor(int season){
+    public void setBlockColor(int season) {
         Color color;
-        switch (season){
-            case(2):
+        switch (season) {
+            case (2):
                 color = winterColor;
                 break;
             default:

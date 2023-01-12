@@ -27,9 +27,8 @@ public class Leaf extends GameObject {
     private final int leafDim;
     private final Color fallColor;
     private final Color winterColor;
-    private Random rand;
-    private Color summerColor;
-
+    private final Random rand;
+    private final Color summerColor;
     private Transition<Float> horizontalTransition;
     private Transition<Float> wind_transition;
     private Transition<Float> size_transition;
@@ -83,24 +82,20 @@ public class Leaf extends GameObject {
 
     /**
      * Changes the leaf color according to season
-     * @param season
+     *
+     * @param season new season
      */
-    public void changeColor(int season ) {
-        Color newColor = summerColor;
-        switch (season){
-            case(0):
-                newColor = summerColor;
-                break;
-            case(1):
+    public void changeColor(int season) {
+        Color newColor;
+        switch (season) {
+            case (1):
                 newColor = fallColor;
                 break;
-            case(2):
+            case (2):
                 newColor = winterColor;
                 break;
-            case(3):
+            default:
                 newColor = summerColor;
-                break;
-
         }
         this.setLeafColor(newColor);
     }
@@ -202,7 +197,8 @@ public class Leaf extends GameObject {
                 TRANSITION_BACK_AND_FORTH,
                 null);
     }
-    private void setLeafColor(Color color){
+
+    private void setLeafColor(Color color) {
         RectangleRenderable re = new RectangleRenderable(color);
         this.renderer().setRenderable(re);
     }

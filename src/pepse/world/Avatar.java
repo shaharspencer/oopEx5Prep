@@ -15,7 +15,9 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Arrays;
 
-
+/**
+ * A class for the playable avatar in the simulation
+ */
 public class Avatar extends GameObject {
     //######## private fields ########
     private final AnimationRenderable standingAnimation;
@@ -53,10 +55,11 @@ public class Avatar extends GameObject {
 
     /**
      * returns a list of strings representing paths to avatar renderables according to the path given
+     *
      * @param path path for images folder
      * @return String[] renderables paths
      */
-    private static String[] getAvatarAnimationsConfigs(String path){
+    private static String[] getAvatarAnimationsConfigs(String path) {
         File dir = new File(path);
 
         File[] directoryListing = dir.listFiles();
@@ -76,9 +79,10 @@ public class Avatar extends GameObject {
 
     /**
      * Constructor for an avatar
-     * @param pos position to set avatar in
+     *
+     * @param pos           position to set avatar in
      * @param inputListener to register user input for avatar movements
-     * @param imageReader image reader to read the images of the avatar
+     * @param imageReader   image reader to read the images of the avatar
      */
     public Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader) {
 
@@ -86,15 +90,15 @@ public class Avatar extends GameObject {
                 new AnimationRenderable(getAvatarAnimationsConfigs(
                         AvatarConfiguration.AVATAR_IMAGE_FOLDER_PATH +
                                 AvatarConfiguration.AVATAR_IMAGE_STANDING_FOLDER),
-                imageReader, true, AvatarConfiguration.TIME_BETWEEN_CLIPS));
+                        imageReader, true, AvatarConfiguration.TIME_BETWEEN_CLIPS));
 
         this.setTag(AvatarConfiguration.AVATAR_TAG);
         this.inputListener = inputListener;
         this.leftAnimation =
                 new AnimationRenderable(getAvatarAnimationsConfigs(
                         AvatarConfiguration.AVATAR_IMAGE_FOLDER_PATH +
-                AvatarConfiguration.AVATAR_IMAGE_LEFT_FOLDER),
-                imageReader, true, AvatarConfiguration.TIME_BETWEEN_CLIPS);
+                                AvatarConfiguration.AVATAR_IMAGE_LEFT_FOLDER),
+                        imageReader, true, AvatarConfiguration.TIME_BETWEEN_CLIPS);
 
         this.rightAnimation = new AnimationRenderable(
                 getAvatarAnimationsConfigs(AvatarConfiguration.AVATAR_IMAGE_FOLDER_PATH +
@@ -103,7 +107,7 @@ public class Avatar extends GameObject {
 
         this.upAnimation = new AnimationRenderable(getAvatarAnimationsConfigs(
                 AvatarConfiguration.AVATAR_IMAGE_FOLDER_PATH +
-                AvatarConfiguration.AVATAR_IMAGE_UP_FOLDER),
+                        AvatarConfiguration.AVATAR_IMAGE_UP_FOLDER),
                 imageReader, true, AvatarConfiguration.TIME_BETWEEN_CLIPS);
 
         this.standingAnimation = new AnimationRenderable(getAvatarAnimationsConfigs(
@@ -146,6 +150,7 @@ public class Avatar extends GameObject {
 
     /**
      * Updates the Avatar
+     *
      * @param deltaTime The time elapsed, in seconds, since the last frame. Can
      *                  be used to determine a new position/velocity by multiplying
      *                  this delta with the velocity/acceleration respectively
@@ -206,14 +211,10 @@ public class Avatar extends GameObject {
         //fly
         else if (inputListener.isKeyPressed(KeyEvent.VK_SHIFT) &&
                 inputListener.isKeyPressed(KeyEvent.VK_SPACE)) {
-             fly();
-        }
-
-        else if (this.getVelocity() == Vector2.ZERO) {
+            fly();
+        } else if (this.getVelocity() == Vector2.ZERO) {
             this.mode = AvatarConfiguration.Mode.REST;
-        }
-
-        else{
+        } else {
             if (this.mode.equals(AvatarConfiguration.Mode.REST)) {
                 return;
             }
@@ -234,16 +235,13 @@ public class Avatar extends GameObject {
             xVel += AvatarConfiguration.VELOCITY_X;
         }
 
-        if (xVel <0 && this.directionOfMovement != AvatarConfiguration.movementDirections.LEFT){
+        if (xVel < 0 && this.directionOfMovement != AvatarConfiguration.movementDirections.LEFT) {
             this.directionOfMovement = AvatarConfiguration.movementDirections.LEFT;
             this.renderer().setRenderable(this.leftAnimation);
-        }
-        else if (xVel >0 && this.directionOfMovement != AvatarConfiguration.movementDirections.RIGHT){
+        } else if (xVel > 0 && this.directionOfMovement != AvatarConfiguration.movementDirections.RIGHT) {
             this.directionOfMovement = AvatarConfiguration.movementDirections.RIGHT;
             this.renderer().setRenderable(this.rightAnimation);
-        }
-
-        else if(xVel == 0 && this.directionOfMovement != AvatarConfiguration.movementDirections.STRAIGHT) {
+        } else if (xVel == 0 && this.directionOfMovement != AvatarConfiguration.movementDirections.STRAIGHT) {
             this.directionOfMovement = AvatarConfiguration.movementDirections.STRAIGHT;
             this.renderer().setRenderable(this.standingAnimation);
         }
@@ -262,8 +260,7 @@ public class Avatar extends GameObject {
                 this.mode = AvatarConfiguration.Mode.FLYING;
                 this.renderer().setRenderable(this.standingAnimation);
             }
-        }
-        else{
+        } else {
             if (this.mode.equals(AvatarConfiguration.Mode.REST)) {
                 return;
             }

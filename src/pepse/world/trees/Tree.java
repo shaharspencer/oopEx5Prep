@@ -17,13 +17,11 @@ public class Tree {
 
     //######## private fields ########
     private final int seed;
-    private final ImageReader imageReader;
     private final GameObjectCollection gameObjects;
     private final Function<Float, Float> yCoordinateCallback;
     private final ImageRenderable flowerImage;
-    private LinkedList<SingleTree> existingTrees = new LinkedList<>();
+    private final LinkedList<SingleTree> existingTrees = new LinkedList<>();
     private final LeafFactory leafFactory;
-
     private int season;
 
     //######## public Methods ########
@@ -42,7 +40,6 @@ public class Tree {
         this.gameObjects = gameObjects;
         this.yCoordinateCallback = yCoordinateCallback;
         this.seed = seed;
-        this.imageReader = imageReader;
         this.flowerImage = imageReader.readImage(TreeConfiguration.FLOWER_IMAGE_PATH,
                 true);
 
@@ -68,7 +65,7 @@ public class Tree {
                     TreeConfiguration.TREE_SPROUT_PROBABILITY) {
                 SingleTree aTree = sproutATree(randX, startPositionX);
                 aTree.changeColor(season);
-                if(season == 3){
+                if (season == 3) {
                     aTree.addFlowers();
                 }
                 treesInRange.add(aTree);
@@ -129,6 +126,7 @@ public class Tree {
 
     /**
      * Changes all the trees in the game according to the new season
+     *
      * @param season new season to switch to
      */
     public void setSeason(int season) {
@@ -225,12 +223,18 @@ public class Tree {
         }
     }
 
+    /**
+     * Adds flowers to the trees
+     */
     private void sproutFlowers() {
         for (SingleTree tree : existingTrees) {
             tree.addFlowers();
         }
     }
 
+    /**
+     * Removes flowers from the trees
+     */
     private void removeFlowers() {
         for (SingleTree tree : existingTrees) {
             tree.removeFlowers();

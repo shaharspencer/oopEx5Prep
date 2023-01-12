@@ -30,7 +30,7 @@ public class PepseGameManager extends GameManager {
     private Avatar avatar;
     private InfiniteWorldManager infiniteWorldManagerCreator;
     private Tree treesManager;
-    private NumericLifeCounter energyCounter;
+    private NumericEnergyMeter energyCounter;
     private SeasonManager seasonManager;
     private SkyManager skyManager;
 
@@ -60,7 +60,7 @@ public class PepseGameManager extends GameManager {
         infiniteWorldManagerCreator.updateByAvatarLocation();
         this.energyCounter.setEnergyLevel(avatar.getEnergyLevel());
 
-        if(this.seasonManager.getDidSeasonChange()){
+        if (this.seasonManager.getDidSeasonChange()) {
             this.treesManager.setSeason(this.seasonManager.getSeason());
             this.skyManager.setSeason(this.seasonManager.getSeason());
             this.terrain.setSeason(this.seasonManager.getSeason());
@@ -70,7 +70,7 @@ public class PepseGameManager extends GameManager {
     }
 
     /**
-      * Initializes the game
+     * Initializes the game
      *
      * @param imageReader      Contains a single method: readImage, which reads an image from disk.
      *                         See its documentation for help.
@@ -137,27 +137,17 @@ public class PepseGameManager extends GameManager {
         createAvatar();
         createInfiniteWorld();
         createSky();
-        createNight();
-        createSun();
         createSeasons();
-
         createEnergyCounter();
-
-//        avatar.setTerrainCallback(terrain::groundHeightAt);
     }
 
-    private void createSeasons() {
-        this.seasonManager = new SeasonManager();
-        seasonManager.create(gameObjects(), SkyAndDayNightConfiguration.SKY_LAYER,
-                GameManagerConfiguration.DAY_CYCLE_LENGTH*GameManagerConfiguration.DAYS_IN_SEASON);
-    }
 
     /**
      * initializes an energy counter object
      */
 
     private void createEnergyCounter() {
-        this.energyCounter = new NumericLifeCounter(
+        this.energyCounter = new NumericEnergyMeter(
                 Vector2.ONES.mult(10)
                 , new Vector2(30, 30),
                 avatar.getEnergyLevel());
@@ -167,7 +157,6 @@ public class PepseGameManager extends GameManager {
         this.energyCounter.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
     }
-
 
 
     /**
@@ -183,6 +172,7 @@ public class PepseGameManager extends GameManager {
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
     }
+
 
     /**
      * initializes an infinite world object and the world according to avatars location
@@ -204,24 +194,32 @@ public class PepseGameManager extends GameManager {
         infiniteWorldManagerCreator.updateByAvatarLocation();
     }
 
+    /**
+     * creates the sky and all of it's objects, and the sky manager
+     */
     private void createSky() {
         skyManager = new SkyManager(gameObjects(), windowDimensions, SkyAndDayNightConfiguration.SKY_LAYER,
                 imageReader);
         skyManager.createSky();
-        //Sky.create(gameObjects(), windowDimensions, GameManagerConfiguration.SKY_LAYER);
-    }
-
-    private void createNight() {
         Night.create(gameObjects(), Layer.FOREGROUND, windowDimensions,
                 GameManagerConfiguration.DAY_CYCLE_LENGTH);
-    }
-
-    private void createSun() {
         GameObject sun = Sun.create(gameObjects(), SkyAndDayNightConfiguration.SUN_LAYER, windowDimensions,
                 GameManagerConfiguration.DAY_CYCLE_LENGTH);
         SunHalo.create(gameObjects(), SkyAndDayNightConfiguration.HALO_LAYER, sun,
                 SkyAndDayNightConfiguration.HALO_COLOR);
     }
+
+    /**
+     * creates the changing season object and the seasons manager
+     */
+    private void createSeasons() {
+        this.seasonManager = new SeasonManager();
+        seasonManager.create(gameObjects(), SkyAndDayNightConfiguration.SKY_LAYER,
+                GameManagerConfiguration.DAY_CYCLE_LENGTH *
+                        GameManagerConfiguration.DAYS_IN_SEASON);
+    }
+
+    //######## MAIN ########
 
     public static void main(String[] args) {
         new PepseGameManager(GameManagerConfiguration.WINDOW_TITLE,

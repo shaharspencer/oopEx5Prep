@@ -14,7 +14,7 @@ import pepse.util.configurations.TreeConfiguration;
 public class LeafFactory {
     //######## private fields ########
     private final GameObjectCollection gameObjects;
-    private int seed;
+    private final int seed;
 
     //######## public methods ########
 

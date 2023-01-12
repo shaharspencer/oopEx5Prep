@@ -17,18 +17,18 @@ public class SkyManager {
     private GameObject currentClouds;
 
     public SkyManager(GameObjectCollection gameObjects, Vector2 windowDimensions, int skyLayer,
-                      ImageReader imageReader){
+                      ImageReader imageReader) {
 
         this.gameObjects = gameObjects;
         this.windowDimensions = windowDimensions;
         this.skyLayer = skyLayer;
-        //TODO: MOVE TO ANOTHER CONFIGURATION FILE
         this.cloudImage = imageReader.readImage(SkyAndDayNightConfiguration.CLOUD_IMAGE,
                 true);
     }
 
     /**
      * Prompts changes to sky when the season changes
+     *
      * @param season new season
      */
     public void setSeason(int season) {

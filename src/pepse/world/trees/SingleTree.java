@@ -7,7 +7,6 @@ import danogl.gui.rendering.ImageRenderable;
 import danogl.util.Vector2;
 import pepse.util.configurations.TreeConfiguration;
 
-import java.awt.*;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -66,16 +65,27 @@ public class SingleTree extends GameObject {
 
     }
 
+    /**
+     * Changes leaves colors according to the season
+     *
+     * @param season new season
+     */
     public void changeColor(int season) {
         for (Leaf leaf : leaves) {
             leaf.changeColor(season);
         }
     }
 
+    /**
+     * Adds flowers to the trees
+     */
     public void addFlowers() {
         sproutLeaves(treetopCenter, treetopRadius, true);
     }
 
+    /**
+     * removes flowers from the trees
+     */
     public void removeFlowers() {
         for (GameObject flower : flowers) {
             gameObjects.removeGameObject(flower, TreeConfiguration.LEAF_LAYER);
@@ -98,7 +108,7 @@ public class SingleTree extends GameObject {
              currentRadiusSize += TreeConfiguration.LEAF_SIZE * TreeConfiguration.LEAF_OVERLAP_FACTOR) {
 
             for (float angle = 0; angle <= 360 -
-                    TreeConfiguration.LEAF_SIZE* TreeConfiguration.LEAF_OVERLAP_FACTOR;
+                    TreeConfiguration.LEAF_SIZE * TreeConfiguration.LEAF_OVERLAP_FACTOR;
                  angle += TreeConfiguration.LEAF_SIZE * TreeConfiguration.LEAF_ANGLE_CHANGE_FACTOR) {
                 Vector2 leafLocation =
                         Vector2.of(currentRadiusSize, currentRadiusSize).rotated(angle).add(treetopCenter);
@@ -129,8 +139,7 @@ public class SingleTree extends GameObject {
      * @return the created Leaf
      */
     private Leaf sproutALeaf(Vector2 leafLocation) {
-        Leaf leaf = leafFactory.createLeaf(leafLocation, rand);
-        return leaf;
+        return leafFactory.createLeaf(leafLocation, rand);
     }
 
 }

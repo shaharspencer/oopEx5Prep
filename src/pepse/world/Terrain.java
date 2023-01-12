@@ -16,7 +16,7 @@ public class Terrain {
     //######## private fields ########
     private final Vector2 vectorZero;
 
-    private int season =0;
+    private int season = 0;
     /*
     this is only here in order to pass the presubmit check, we are using the color defined in the
      configuration file
@@ -99,6 +99,7 @@ public class Terrain {
      * This method creates terrain in a given range of x-values.
      * Creation is performed by columns, using createBlocksColumn.
      * Parameters:
+     *
      * @param minX - The lower bound of the given range (will be rounded to a multiple of Block.SIZE).
      * @param maxX - The upper bound of the given range (will be rounded to a multiple of Block.SIZE).
      */
@@ -209,8 +210,7 @@ public class Terrain {
                 block.setTag(TerrainConfiguration.TOP_BLOCK_TAG);
 
 
-            }
-            else {
+            } else {
                 gameObjects.addGameObject(block, TerrainConfiguration.DEFAULT_BLOCKS_LAYER);
                 block.setTag(TerrainConfiguration.LOW_BLOCK_TAG);
             }
@@ -241,23 +241,25 @@ public class Terrain {
 
     /**
      * Pompts changes to terrain when the season changes
+     *
      * @param season the new season
      */
     public void setSeason(int season) {
         this.season = season;
         //if season is 2 - winter, or 3 - spring
-        if (season > 1 && season <4){
+        if (season > 1 && season < 4) {
             setGroundColor(season);
         }
     }
 
     /**
      * Change the ground color according to season
+     *
      * @param season new season
      */
     private void setGroundColor(int season) {
         for (ArrayList<Block> column : blockColumns) {
-            for (Block block: column){
+            for (Block block : column) {
                 block.setBlockColor(season);
             }
         }

@@ -15,6 +15,7 @@ public class SeasonManager {
 
     /**
      * creates the game object that represents the season and changes over time
+     *
      * @param gameObjects
      * @param layer
      * @param seasonLength the duration of each season in seconds
@@ -33,31 +34,33 @@ public class SeasonManager {
     /**
      * update the season to the next season
      */
-    private void changeSeason(){
-        season = (season +1) % 4;
+    private void changeSeason() {
+        season = (season + 1) % 4;
         didSeasonChange = true;
     }
 
     /**
      * getter for the current season value
+     *
      * @return int of the current season
      */
-    public int getSeason(){
+    public int getSeason() {
         return season;
     }
 
     /**
      * getter to see if the season has changed
+     *
      * @return
      */
-    public boolean getDidSeasonChange(){
+    public boolean getDidSeasonChange() {
         return didSeasonChange;
     }
 
     /**
      * Sets the value indicating if the season changed to false
      */
-    public void turnOffDidSeasonChange(){
+    public void turnOffDidSeasonChange() {
         didSeasonChange = false;
     }
 }
