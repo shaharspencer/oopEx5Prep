@@ -97,7 +97,8 @@ public class SingleTree extends GameObject {
              currentRadiusSize <= treetopRadius - TreeConfiguration.LEAF_SIZE;
              currentRadiusSize += TreeConfiguration.LEAF_SIZE * TreeConfiguration.LEAF_OVERLAP_FACTOR) {
 
-            for (float angle = 0; angle <= 360 - TreeConfiguration.LEAF_SIZE;
+            for (float angle = 0; angle <= 360 -
+                    TreeConfiguration.LEAF_SIZE* TreeConfiguration.LEAF_OVERLAP_FACTOR;
                  angle += TreeConfiguration.LEAF_SIZE * TreeConfiguration.LEAF_ANGLE_CHANGE_FACTOR) {
                 Vector2 leafLocation =
                         Vector2.of(currentRadiusSize, currentRadiusSize).rotated(angle).add(treetopCenter);

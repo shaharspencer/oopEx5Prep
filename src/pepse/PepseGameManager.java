@@ -144,7 +144,7 @@ public class PepseGameManager extends GameManager {
 
         createEnergyCounter();
 
-        avatar.setTerrainCallback(terrain::groundHeightAt);
+//        avatar.setTerrainCallback(terrain::groundHeightAt);
     }
 
     private void createSeasons() {

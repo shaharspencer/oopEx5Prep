@@ -8,6 +8,7 @@ public class AvatarConfiguration {
     public static final int MAX_Y_VELOCITY = 300;
     public static final int MIN_Y_VELOCITY = -400;
     public static final String AVATAR_IMAGE_STANDING_FOLDER = "standing";
+    public static final String AVATAR_TAG = "avatar";
     public static int initialAvatarEnergyLevel = 100;
     public static Vector2 initialAvatarLocation = new Vector2(0, 0);
     public static int AVATAR_LAYER = Layer.UI;

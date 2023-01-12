@@ -210,7 +210,10 @@ public class Terrain {
             if (isCollisionBlock(curBlockTopLeftYCoor, topLeftCorner.y(), topLeftCorner.x())) {
                 gameObjects.addGameObject(block, TerrainConfiguration.TOP_BLOCKS_LAYER);
                 block.setTag(TerrainConfiguration.TOP_BLOCK_TAG);
-            } else {
+
+
+            }
+            else {
                 gameObjects.addGameObject(block, TerrainConfiguration.DEFAULT_BLOCKS_LAYER);
                 block.setTag(TerrainConfiguration.LOW_BLOCK_TAG);
             }

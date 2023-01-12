@@ -10,7 +10,7 @@ import java.util.function.Supplier;
  * game objects in it as the avatar moves.
  */
 public class InfiniteWorldManager {
-    private static final double BUFFER_FACTOR = 0.75;
+    private static final double BUFFER_FACTOR = 0.55;
     //######## private fields ########
 
     //the size of the world that exists at any time during the game is windowSixe + 2*Buffer
