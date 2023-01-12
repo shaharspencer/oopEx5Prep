@@ -124,3 +124,5 @@ ellie.shami
     the leaves change colors to a verity of yellows and oranges, during the winter the ground and the trees
     are covered with snow so their colors represent that, and in the spring the sky is clear and the trees are
     blooming.
+    (the seasons are set to change every two days, this can be changed in the game manager configuration file
+    in the field DAYS_IN_SEASON)
