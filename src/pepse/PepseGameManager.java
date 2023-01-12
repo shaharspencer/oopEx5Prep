@@ -27,7 +27,6 @@ public class PepseGameManager extends GameManager {
     private ImageReader imageReader;
     private UserInputListener inputListener;
     private WindowController windowController;
-    private GameObject sun;
     private Avatar avatar;
     private InfiniteWorldManager infiniteWorldManagerCreator;
     private Tree treesManager;
@@ -218,7 +217,7 @@ public class PepseGameManager extends GameManager {
     }
 
     private void createSun() {
-        this.sun = Sun.create(gameObjects(), SkyAndDayNightConfiguration.SUN_LAYER, windowDimensions,
+        GameObject sun = Sun.create(gameObjects(), SkyAndDayNightConfiguration.SUN_LAYER, windowDimensions,
                 GameManagerConfiguration.DAY_CYCLE_LENGTH);
         SunHalo.create(gameObjects(), SkyAndDayNightConfiguration.HALO_LAYER, sun,
                 SkyAndDayNightConfiguration.HALO_COLOR);

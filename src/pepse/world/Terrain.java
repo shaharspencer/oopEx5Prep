@@ -104,11 +104,8 @@ public class Terrain {
      */
     public void createInRange(int minX, int maxX) {
 
-        int lowerBound = minX;
-        int upperBound = maxX;
-
         ArrayList<ArrayList<Block>> rangeBlocks = new ArrayList<>();
-        for (int x = lowerBound; x <= upperBound + Block.SIZE; x += Block.SIZE) {
+        for (int x = minX; x <= maxX + Block.SIZE; x += Block.SIZE) {
             int y = (int) groundHeightAt(x);
             Vector2 topLeftCorner = new Vector2(x, y);
             rangeBlocks.add(createBlocksColumn(topLeftCorner));
@@ -242,28 +239,22 @@ public class Terrain {
         return (cond1 || cond2 || cond3);
     }
 
+    /**
+     * Pompts changes to terrain when the season changes
+     * @param season the new season
+     */
     public void setSeason(int season) {
         this.season = season;
-        switch (season) {
-            //summer
-            case (0):
-                break;
-            //"fall"
-            case (1):
-                //addClouds();
-                break;
-            //winter
-            case (2):
-                setGroundColor(season);
-                break;
-            //spring
-            case (3):
-                setGroundColor(season);
-                break;
+        //if season is 2 - winter, or 3 - spring
+        if (season > 1 && season <4){
+            setGroundColor(season);
         }
-
     }
 
+    /**
+     * Change the ground color according to season
+     * @param season new season
+     */
     private void setGroundColor(int season) {
         for (ArrayList<Block> column : blockColumns) {
             for (Block block: column){
