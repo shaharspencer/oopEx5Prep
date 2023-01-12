@@ -1,0 +1,107 @@
+shaharspencer
+ellie.shami
+
+1.UMLs:
+//TODO WRITE THIS
+
+2. Infinite World:
+2.1 we made our world infinite using a class called InfiniteWorldManager. it has a method that update
+    in PepseGameManager calls to update the world using the avatar location.
+    we have a variable called buffer which defines the maximum amount the avatar is allowed to be
+    outside of in order for us to want to update the infinite world.
+    if we have exceeded this variable, by the avatar for example going right,
+    we want to add BUFFER amount of trees and blocks to the right of the current world,
+    and delete BUFFER amount of trees and blocks to the left of the current world.
+2.2 In each of the classes Tree and Terrain, we have a linked list that holds a sorted list of
+    the blocks \ trees, from left to right. when we move right we add to the end of that list for
+    an Xrange of around BUFFER, and we remove from the beginning of that list around BUFFER amount.
+    This makes it so the game only holds a relatively stable length of world and the game can run quickly.
+2.3 Each class, terrain and tree, is responsible for deleting and adding objects in the world according to the
+    avatar movement and the world size and buffer as described above.
+    When the avatar movement requires deleting objects they will be asked to do so from a specific
+    starting point (x coordinate) and they will do so until "the end of the world" - meaning from that point
+    to the end of all of the objects currently in the game (according to the side of the screen they need to
+    delete).
+    Each will delete all of the objects relating to itself: terrain holds columns (lists) of blocks and for
+    each column removes all blocks in that column, and the tree removes it's stump and it's leaves.
+    We implemented it this way in order to minimize the number of checks required to decide which objects to
+    remove each time: leaves are never checked, the tree manager decides for the entire tree if it needs to be
+    removed according to it's stump. Similarly for terrain - we don't need to check each ground block, after
+    locating the relevant block columns only then will we go over the relevant blocks and delete them.
+2.4 In order to create "consistent randomization" in the game we are using random objects with seed that is
+    the hash of the seed defined for the entire game and the x coordinate of the object that is the "owner"
+    of the random.
+    There is only one seed defined in the game, it is set in the game manager configuration file and thus can
+    be easily changed.
+    For Terrain, in the method responsible for calculating the ground height at x coordinate, we set the seed
+    of the perlin noise method each time the method is called to be a hash of the seed and the x coordinate.
+    When creating the ground we use the same methodology, only now by creating a Random object with this has
+    as a seed - used to choose the ground block color at random (from an array defined in terrain
+    configuration).
+    For trees this works with the same general principle, but is a bit more complicated - elaboration can be
+    seen under "Trees" (starting from 3.4).
+
+3. Trees:
+3.1 We considered the Tree class that is defined in the instructions as a "trees manager", a class that is
+    responsible for managing all of the trees and leaves in the game. There is only one instance of it in the
+    game, and from here on we'll refer to it as "the tree manager"
+    In order to maintain a mentality of having objects that represent actual objects in the game we decided to
+     create a class called "SingleTree" that each of its instances represents a tree object in
+    the game. Each tree has a stump (gameObject) and a set of leaves that construct its treetop.
+3.2 We decided not to implement the stump or the leaves as Block instances (or as classes that extend Block)
+    because of that mentality, a stump is a single object and not a collection of blocks, and a Leaf is a
+    complicated object with it's own features and functionalities, not simply a green block hanging in the
+    air. In addition, Each leaf size and color are randomized (from a set array of options).
+3.3 In order to create leafs the tree manager creates an instance of LeafFactory. The factory is responsible,
+    as expected, for creating a single leaf each time, using the method "createLeaf".
+    The tree manager passes forward the instance of the leaves factory to each of the SingleTrees it creates,
+    and in turn they call to its "createLeaf" method.
+    More about leaves bellow.
+3.4 Sprouting trees:
+    When creating trees in a set range, Tree defines for each possible spot to sprout a tree (not for every x
+    coordinate, we defined some minimal spacing between trees for appearance) a random object with a seed that
+    is tha hash of the general game seed and the x coordinate of that spot.
+    If there will be a tree there, this random object will be the tree's unique random object, used only for
+    determining things regarding that tree (whether or not to sprout a tree, the stump size, etc.).
+    There will not be a tree in every possible sprout spot, we defined the desired probability for a tree to
+    sprout in the tree configuration file.
+3.4 Once we decided to sprout a tree, the tree manager sets the needed parameters (stump size, treetop size,
+    etc.) and creates a SingleTree instance with them. The tree manager holds references to all of the
+    SingleTrees sprouted and is responsible for deleting them when they are out of bounds, as described under
+    the Infinite World (2.3).
+3.5 When created, a SingleTree creates a stump and a treetop constructed of many single leaves.
+    It uses it's unique random object to decide where the leaves will be located, and then creates them using
+    an instance of LeafFactory that is passed on to it from the tree manager.
+3.6 When calling "createLeaf" the SingleTree that wants to create a leaf needs to provide the factory with
+    its unique random object as one of the parameters. The factory uses it to decide on the settings of the
+    leaf, like it's color and size.
+    Then, when creating an instance of Leaf the factory provides Leaf's constructor with the game seed.
+    The leaf in it's turn uses it to create its won unique random object, used to set all of the transitions,
+    waiting time, etc.
+    We decided to separate the leafs' unique random objects from the trees' to be sure that the life cycle of
+    the leaves of each tree don't effect the consistency of randomization in the game.
+3.7 When the tree manager needs to remove a tree from the game, the tree is responsible for deleting itself
+    (stump and leaves).
+
+4. Design choices and dilemmas:
+4.1 we wanted to create a variety of different leaves color and size wise, since it's a whole object of itself
+    with it's own features and functionalities we chose to create a separate class for leaves (as described
+    above at section 3.2).
+4.2 we chose to create configuration files for classes, this is for readability, for ease of reconfiguration
+    throughout the many files of the project and for consistency.
+4.3 we used Factories for blocks and leaves.
+4.4 We were considering different ways to place the leaves around a tree, for example - randomly in a
+    rectangular range, and at the end decided on using a radius and a rotating angle so that it will be round
+    and more realistic. We also tried different ways to set the treetop size before choosing a fixed ratio of
+    a third from the stump height.
+4.5 deciding that the stump isn't a Block\set of blocks (as described above at section 3.2)
+
+5. Bonuses: (explain what bonuses you did and how you implemented them)
+- we added a visual energy counter that shows how much energy the avatar has
+- we added varying colors to the blocks, chosen randomly but remaining consistent as the world moves
+left and right
+- we added varying colors to the leaves, chosen randomly but remaining consistent as the world moves
+ left and right
+- we chose the leaf size at random (again, consistently)
+- we added season changes, every few numbers of days we changed the schema of the game to fit a specific
+season and it goes in a cycle of four.
