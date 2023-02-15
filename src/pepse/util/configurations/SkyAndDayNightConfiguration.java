@@ -11,7 +11,7 @@ public class SkyAndDayNightConfiguration {
     public static int SUN_LAYER = SKY_LAYER + LAYERS_DIFF;
     public static int HALO_LAYER = SUN_LAYER + LAYERS_DIFF;
     public static final String NIGHT_TAG = "night";
-    public static final String CLOUD_IMAGE = "./src/assets/clouds.png";
+    public static final String CLOUD_IMAGE = "./assets/clouds.png";
     public static final Vector2 SNOW_SIZE = Vector2.of(30,30);
     public static float NOON_OPACITY = 0f;
     public static float MIDNIGHT_OPACITY = 0.5f;

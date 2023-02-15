@@ -30,7 +30,7 @@ public class TreeConfiguration {
             Color.WHITE,
             new Color(195, 226, 234)};
     public static final Vector2 FLOWER_SIZE = Vector2.of(15,15);
-    public static final String FLOWER_IMAGE_PATH = "./src/assets/flower.jpeg";
+    public static final String FLOWER_IMAGE_PATH = "./assets/flower.jpeg";
 
     /* leaf definitions */
     public static String LEAF_TAG = "leaf";

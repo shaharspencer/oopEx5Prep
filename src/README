@@ -12,6 +12,7 @@ ellie.shami
 1.5. we added a season manager to manage the seasons (encapsulation principle).
 1.6. we added methods we saw as necessary to the different classes in order to control the flow of the classes
     within themselves and in order to help classes interact in an abstract way.
+    This also helped us to reuse code and avoid code duplication.
 
 
 2. Infinite World:
@@ -101,7 +102,8 @@ ellie.shami
     above at section 3.2).
 4.2 we chose to create configuration files for classes, this is for readability, for ease of reconfiguration
     throughout the many files of the project and for consistency.
-4.3 we used Factories for blocks and leaves.
+4.3 we used Factories for blocks and leaves that hold the designated responsibility for creating instances of
+    those classes.
 4.4 We were considering different ways to place the leaves around a tree, for example - randomly in a
     rectangular range, and at the end decided on using a radius and a rotating angle so that it will be round
     and more realistic. We also tried different ways to set the treetop size before choosing a fixed ratio of
